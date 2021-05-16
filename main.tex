@@ -1,6 +1,10 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,12pt,twoside]{article}
 \usepackage{xspace}
 \usepackage{url}
+\usepackage{relsize}
+\usepackage{calc}
+\usepackage{dimensions}
+
 \newcommand{\Rplus}{\protect\hspace{-.1em}\protect\raisebox{.35ex}{\smaller{\smaller\textbf{+}}}}
 \newcommand{\CMake}{\texttt{CMake}\xspace}
 \newcommand{\HiGHS}{\texttt{HiGHS}\xspace}
@@ -11,7 +15,12 @@
 \newcommand{\highs}{\HiGHS}
 \newcommand{\openmp}{\OpenMP}
 
+\newcommand{\C}{\mbox{C}\xspace}
 \newcommand{\Cpp}{\mbox{C\Rplus\Rplus}\xspace}
+
+
+\def\code#1{\texttt{#1}}
+
 
 \title{
 \HiGHS pre-release document}
@@ -19,9 +28,64 @@
 \author{J. A. J. Hall}
 
 \flushbottom
+\renewcommand{\familydefault}{\sfdefault}
 
 \begin{document}
+
 %\pagenumbering{roman}
 \maketitle
+\tableofcontents
+
+\section{Introduction}
+
+Although \HiGHS has been referring to Version 1.0.0 for a couple of
+years, only now do we feel happy to create a formal release of Version
+1.0.0. This document is for people who have been using \HiGHS and will
+be using Version 1.0.0.
+
+When we created \HiGHS two years ago, we tried to make design
+decisions that were good for both us and our users. We are still
+generally happy with these decisions but, as \HiGHS has developed and
+we have listened to our users, some have been revised. Most of the
+effect has been internal, but some changes will affect users and are
+documented here.
+
+Full documentation is available in the Version 1.0.0 release document.
+
+\section{Model definition}
+\HiGHS began as an LP solver, but later acquired a MIP solver, and now
+has a QP solver. Within \Cpp, the original \code{HighsLp} class was
+stretched to define MIPs, but a QP can't be argued to be a case of LP!
+Hence we have introduced a \code{HighsModel} class that can be used to
+define an LP, MIP or QP. Within the \code{Highs} class,
+\code{HighsModel} is passed to \HiGHS as an argument to
+\code{passModel}.
+
+In the \C interface, for reasons discussed below, the definition of
+the \code{highs\_passLp} method to pass an LP has changed. There are
+also \C methods \code{highs\_passMip} and \code{highs\_passQp} to pass
+MIP and QP problems.
+
+\subsection{Row-wise constraint matrix}
+Since solvers generally access the constraint matrix column-wise, this
+was the originally the only orientation permitted by \HiGHS for model
+defintion. However, it is generally preferable for modelling
+interfaces and users to specify the constraint matrix row-wise. Hence
+the \code{HighsLp} class has a \code{MatrixOrientation} member to
+specify whether the matrix is held row-wise or column-wise. In the \C
+interface, a \code{rowwise} parameter has been introduced.
+
+\subsection{Compatibility}
+For back-compatibility, the \code{HighsLp} class has been retained,
+and it is still possible to pass an LP or MIP to \HiGHS by giving
+\code{passModel} a \code{HighsLp} as an argument. However, to ensure
+future compatibility, users should pass a \code{HighsModel}.
+
+\section{Model return}
+For \Cpp users, the \code{Highs} class contains a method
+\code{getModel} that returns a const reference to the internal
+\code{HighsModel}. The method \code{getLp} that returned a const
+reference to the internal \code{HighsLp} has been deleted from the
+\code{Highs} class.
 
 \end{document}
