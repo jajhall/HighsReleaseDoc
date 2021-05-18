@@ -270,6 +270,63 @@ Table~\ref{tab:ChangedConstants}.
 
 \section{Deleted and deprecated methods}
 
+To allow progress and keep the \HiGHS software engineering within the
+resources available, a small number of methods have been deleted, and
+a rather larger number are deprecated. These can be expected to be
+deleted in future versions of \HiGHS.
+
+\subsection{Deleted methods}
+
+As well as deleting \code{getLp} from the \code{Highs} class, three
+methods have been deleted from the \C interface. These are
+\code{Highs\_modelStatusToChar}, \code{Highs\_solutionStatusToChar} and
+\code{Highs\_highsModelStatusToChar} since they fail on Windows and
+MacOS (but not on Linux).
+
+\subsection{Deprecated methods}
+
+The deprecated methods in the \Cpp \HiGHS class, the corresponding
+method(s) in the \C interface and their replacements (where relevant)
+are listed in Table~\ref{tab:DeprecatedMethods}. The first two relate
+to the old logging system, and both now set the option
+\code{output\_flag} to false, stopping any logging from \HiGHS: they
+will soon be deleted. Early versions of \HiGHS had a dedicated method
+to get the simplex iteration count, and this was also returned by two
+methods in the \C interface. However, this will be deleted now that
+the simplex iteration count is one of many solution attributes are
+available from \HiGHS via the \code{HighsInfo} class and, in the \C
+interface, via \code{Highs\_getIntInfoValue} and
+\code{Highs\_getDoubleInfoValue}. The remaining deprecated methods
+have replacement methods with ``Highs'' omitted from the name. In the
+case of the \HiGHS class, ``Highs'' is implied by the class name, and
+in the \C interface, the method names are distinguished as belonging
+to \HiGHS by beginning ``\code{Highs\_}''.
+
+\begin{sidewaystable}
+\centerline{
+  \begin{tabular}{|l|p{7cm}|l|p{5cm}|}\hline
+\multicolumn2{|c|}{Deprecated}&\multicolumn2{c|}{Replacement}\\\hline
+\Cpp \HiGHS class & \C interface equivalent(s) & \Cpp & \C equivalent(s) \\\hline
+\code{setHighsLogfile} & \code{Highs\_setHighsLogfile} & \multicolumn2{c|}{None: redundant due to logging change}\\
+\code{setHighsOutput} & \code{Highs\_setHighsOutput} & \multicolumn2{c|}{None: redundant due to logging change}\\\hline
+\code{getSimplexIterationCount} &
+\code{Highs\_getSimplexIterationCount};
+\code{Highs\_getIterationCount} & \code{getInfo} & \code{Highs\_getIntInfoValue} \\\hline
+\code{setHighsOptionValue} & \code{Highs\_setHighsOptionValue} & \code{setOptionValue} & \code{Highs\_setOptionValue}\\
+\code{readHighsOptions} & \code{Highs\_readHighsOptions} & \code{readOptions} & \code{Highs\_readOptions}\\
+\code{passHighsOptions} & \code{Highs\_passHighsOptions} & \code{passOptions} & \code{Highs\_passOptions}\\
+\code{getHighsOptionValue} & \code{Highs\_getHighsOptionValue} & \code{getOptionValue} & \code{\_getHighsOptionValue}\\
+\code{getHighsOptions} & \code{Highs\_getHighsOptions} & \code{getOptions} & \code{Highs\_getOptions}\\
+\code{resetHighsOptions} & \code{Highs\_resetHighsOptions} & \code{resetOptions} & \code{Highs\_resetOptions}\\
+\code{writeHighsOptions} & \code{Highs\_writeHighsOptions} & \code{writeOptions} & \code{Highs\_writeOptions}\\
+\code{getHighsInfo} & \code{Highs\_getHighsInfo} & \code{getInfo} & \code{Highs\_getInfo}\\
+\code{getHighsInfoValue} & \code{Highs\_getHighsInfoValue} & \code{getInfoValue} & \code{Highs\_getInfoValue}\\
+\code{writeHighsInfo} & \code{Highs\_writeHighsInfo} & \code{writeInfo} & \code{Highs\_writeInfo}\\
+\code{getHighsInfinity} & \code{Highs\_getHighsInfinity} & \code{getInfinity} & \code{Highs\_getInfinity}\\
+\code{getHighsRunTime} & \code{Highs\_getHighsRunTime} & \code{getRunTime} & \code{Highs\_getRunTime}\\\hline
+    \end{tabular}}
+\caption{Deprecated methods}\label{tab:DeprecatedMethods}
+\end{sidewaystable}
 
 
 \bibliographystyle{abbrv}
