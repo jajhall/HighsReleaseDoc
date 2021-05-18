@@ -4,6 +4,7 @@
 \usepackage{relsize}
 \usepackage{calc}
 \usepackage{dimensions}
+\usepackage{rotating}
 
 \newcommand{\Rplus}{\protect\hspace{-.1em}\protect\raisebox{.35ex}{\smaller{\smaller\textbf{+}}}}
 \newcommand{\CMake}{\texttt{CMake}\xspace}
@@ -20,6 +21,7 @@
 
 
 \def\code#1{\texttt{#1}}
+\def\file#1{\texttt{#1}}
 
 
 \title{
@@ -40,21 +42,75 @@
 
 Although \HiGHS has been referring to Version 1.0.0 for a couple of
 years, only now do we feel happy to create a formal release of Version
-1.0.0. This document is for people who have been using \HiGHS and will
-be using Version 1.0.0.
+1.0.0. When \HiGHS was created, we tried to make design decisions that
+were good for both us and our users. We are still generally happy with
+these decisions but, as \HiGHS has developed and we have listened to
+our users, some have been revised. Most of the effect has been
+internal, but some changes will affect users and are documented here.
 
-When we created \HiGHS two years ago, we tried to make design
-decisions that were good for both us and our users. We are still
-generally happy with these decisions but, as \HiGHS has developed and
-we have listened to our users, some have been revised. Most of the
-effect has been internal, but some changes will affect users and are
-documented here.
+This document is for people who are familiar with using \HiGHS and
+want to know what changes and new features there are in Version
+1.0.0. New users and those wanting a greater level of detail should
+consult the full documentation in the Version 1.0.0 release document.
 
-Full documentation is available in the Version 1.0.0 release document.
-
-\section{Model definition}
+\section{Summary of enhancements in Version 1.0.0}
 \HiGHS began as an LP solver, but later acquired a MIP solver, and now
-has a QP solver. Within \Cpp, the original \code{HighsLp} class was
+has a QP solver. In addition to these major developments, here is a
+list of new features, most of which have been developed at the request
+of users. Full details are available in the Version 1.0.0 release
+document.
+\begin{itemize}
+\item \HiGHS can be compiled to use long (64-bit) integers.
+\item \HiGHS can receive or build the constraint matrix row-wise.
+\item The dual values for rows are no longer negated.
+\item Control of logging output from \HiGHS has been simplified.
+\item When the model is an LP and has been solved to optimality,
+  sensitivity ranges for all costs, active bounds and basic variables
+  are now available.
+\item When the solving of a model is interrupted without obtaining an
+  optimal solution, a primal and dual solution now available (where
+  possible).
+\item The status of any primal or dual solution returned by \HiGHS is
+  indicated by the value of the \code{HighsInfo} entries
+  \code{primal\_solution\_status} and
+  \code{dual\_solution\_status}. These are interpreted using
+  the values in Table~\ref{tab:HighsSolutionStatus}.
+  \begin{table}[h]
+    \centerline{
+      \begin{tabular}{|l|l|p{8cm}|}\hline
+        Value & \Cpp constant & Interpretation\\\hline
+        0 & \code{kSolutionStatusNone} & There is no solution available \\
+        1 & \code{kSolutionStatusInfeasible} & An infeasible solutiuon is available\\
+        2 & \code{kSolutionStatusFeasible} &An feasible solutiuon is available\\\hline
+    \end{tabular}}
+    \caption{Interpreting solution status values}\label{tab:HighsSolutionStatus}
+  \end{table}
+  
+\item \HiGHS can now be used to presolve an LP or MIP, allowing users
+  to extract the model. In a future release, \HiGHS will determine the
+  optimal primal solution, dual solution or basis for the original
+  model given the corresponding data for the optimal solution of the
+  presolved model.
+\end{itemize}
+
+\section{Long integers}
+To allow larger models to be handled, it is now possible to compile
+\HiGHS so that it uses long (64-bit) integers in all cases. When built
+using \code{CMake}, this is achieved by setting
+\code{-DHIGHSINT64=on}. The type \code{HighsInt} is then set to be
+\code{int64\_t} rather than \code{int}. By default, \HiGHS compiles
+with standard (32-bit) integers. Long integers are not currently
+supported by the \code{FORTRAN} interface. Since \HiGHS can be
+compiled with either standard or long integers, integer values are
+referred to below anonymously as \code{integer}.
+
+\section{Model handling}
+Now that \HiGHS can solve MIPs and QPs, as well as LPs, model handling
+has been generalised. It is also now possible to pass or build the
+constraint matrix row-wise.
+
+\subsection{Model definition}
+Within \Cpp, the original \code{HighsLp} class was
 stretched to define MIPs, but a QP can't be argued to be a case of LP!
 Hence we have introduced a \code{HighsModel} class that can be used to
 define an LP, MIP or QP. Within the \code{Highs} class,
@@ -66,26 +122,158 @@ the \code{highs\_passLp} method to pass an LP has changed. There are
 also \C methods \code{highs\_passMip} and \code{highs\_passQp} to pass
 MIP and QP problems.
 
-\subsection{Row-wise constraint matrix}
+\subsubsection{Row-wise constraint matrix}
 Since solvers generally access the constraint matrix column-wise, this
-was the originally the only orientation permitted by \HiGHS for model
-defintion. However, it is generally preferable for modelling
-interfaces and users to specify the constraint matrix row-wise. Hence
-the \code{HighsLp} class has a \code{MatrixOrientation} member to
+was originally the only orientation permitted by \HiGHS. However, it
+is often preferable for modelling interfaces and users to specify the
+constraint matrix row-wise. Hence the \code{HighsLp} and
+\code{HighsModel} classes have a \code{MatrixOrientation} member to
 specify whether the matrix is held row-wise or column-wise. In the \C
-interface, a \code{rowwise} parameter has been introduced.
+interface, a \code{rowwise} parameter has been introduced to the
+parameter list of \code{highs\_passLp}.
 
-\subsection{Compatibility}
+\subsubsection{Compatibility}
 For back-compatibility, the \code{HighsLp} class has been retained,
 and it is still possible to pass an LP or MIP to \HiGHS by giving
 \code{passModel} a \code{HighsLp} as an argument. However, to ensure
 future compatibility, users should pass a \code{HighsModel}.
 
-\section{Model return}
+\subsection{Model return}
 For \Cpp users, the \code{Highs} class contains a method
 \code{getModel} that returns a const reference to the internal
 \code{HighsModel}. The method \code{getLp} that returned a const
 reference to the internal \code{HighsLp} has been deleted from the
 \code{Highs} class.
+
+\section{Model status}
+
+The model status is a value that indicates the model's feasibility,
+unboundedness or whether an optimal solution has been obtained by the
+solver. The possible statuses that can occur, and the values that
+indicate the status, have changed for some edge cases. In particular,
+and consistent with commercial solvers, if a model is both primal and
+dual infeasible, \HiGHS no longer idetifies this: it will only
+indicate primal infeasibility. Again, as with commercial solvers, if a
+model is dual infeasible then, unless it is identified as being either
+primal infeasible, or primal unbounded, the \HiGHS model status will
+indicate it as being infeasible or unbounded.
+
+Within \Cpp the model status value is taken from an enum class
+\code{HighsModelStatus}. Since the names of constants in \HiGHS now
+conform to the Google \Cpp style guide~\cite{GoogleStyleGuide}, the entries of
+\code{HighsModelStatus} have changed. For the \C interface, entries of
+\code{HighsModelStatus} are cast to integers and, in general, the
+value associated with a given status has changed. The correspondence
+between current and former model status values is set out in
+Table~\ref{tab:HighsModelStatus}.
+
+\begin{sidewaystable}
+\centerline{
+  \begin{tabular}{|p{8cm}|l|l|l|l|}\hline
+&\multicolumn2{c|}{Currently}&\multicolumn2{c|}{Formerly}\\\cline{2-5}
+    Description&Integer&\code{HighsModelStatus}&Integer&\code{HighsModelStatus}\\\hline
+Not set&0&\code{kNotset}&0&\code{NOTSET}\\
+Error loading the model&1&\code{kLoadError}&1&\code{LOAD\_ERROR}\\
+Error in the model definition&2&\code{kModelError}&2&\code{MODEL\_ERROR}\\
+Error presolving the model&3&\code{kPresolveError}&3&\code{PRESOLVE\_ERROR}\\
+Error solving the model&4&\code{kSolveError}&4&\code{SOLVE\_ERROR}\\
+Error postsolving the model&5&\code{kPostsolveError}&5&\code{POSTSOLVE\_ERROR}\\
+Model is empty&6&\code{kModelEmpty}&6&\code{MODEL\_EMPTY}\\
+Model solution is optimal&7&\code{kOptimal}&9&\code{OPTIMAL}\\
+Model is (primal) infeasible &8&\code{kInfeasible}&7&\code{PRIMAL\_INFEASIBLE}\\
+Model is (primal) unbounded or infeasible&9&\code{kUnboundedOrInfeasible}&&\code{}\\
+Model is (primal) unbounded&10&\code{kUnbounded}&8&\code{PRIMAL\_UNBOUNDED}\\
+Any optimal objective is at least a given bound &11&\code{kObjectiveBound}&10&\code{REACHED\_DUAL\_OBJECTIVE\_VALUE\_UPPER\_BOUND}\\
+There is a feasible solution with at least a given target value &12&\code{kObjectiveTarget}&&\code{}\\
+The solution time limit has been reached&13&\code{kTimeLimit}&11&\code{REACHED\_TIME\_LIMIT}\\
+The solution iteration limit has been reached&14&\code{kIterationLimit}&12&\code{REACHED\_ITERATION\_LIMIT}\\
+The model status is unknown&15&\code{kUnknown}&&\code{}\\
+Model is primal and dual infeasible&&&13&\code{PRIMAL\_DUAL\_INFEASIBLE}\\
+Model is dual infeasible&&&14&\code{DUAL\_INFEASIBLE}\\\hline
+  \end{tabular}}
+\caption{Interpreting current and former model status values}\label{tab:HighsModelStatus}
+\end{sidewaystable}
+
+\section{Row dual values}
+For historical reasons, the sign of the dual values for constraints
+that were returned by \HiGHS were negated. This is not done in Version
+1.0.0. For convenience and communication, the constant
+$$
+\code{kHighsPrereleaseRowDualSign}
+$$
+%
+has been introduced into recent pre-release versions of \HiGHS. If it
+is not present in the version you are using, or takes a value of 1,
+then the row dual signs are negated. If it takes a value of -1, then
+row dual signs are not negated. Thus, multiplying any \HiGHS row duals
+by this value yields the negated row duals with which many users will
+be familiar.
+
+\section{Logging}
+The original mechanism for handling logging output from \HiGHS was
+over-engineered and opaque. It has now been re-written. By default,
+log output goes to both the console and to the file
+\file{Highs.log}. The production of log output and name of the logging
+file is controlled by the \code{HighsOptions} settings in
+Table~\ref{tab:HighsLogging}.
+\begin{table}
+\centerline{
+  \begin{tabular}{|l|l|l|p{10cm}|}\hline
+    Option name & Type & Default & Description\\\hline
+    \code{output\_flag} & \code{bool} & \code{true} & Determines whether there is logging output from \HiGHS\\
+    \code{log\_to\_console} & \code{bool} & \code{true} & Determines whether any logging output from \HiGHS goes to the console\\
+    \code{log\_file} & \code{string} & \file{Highs.log} & Allows the name of the logging file to be changed
+    %    \\\code{log\_dev\_level} & \code{integer} &
+    \\\hline
+    \end{tabular}}
+\caption{Logging options}\label{tab:HighsLogging}
+\end{table}
+
+
+\section{Deleted options}
+
+When \HiGHS is called from an application, the options
+\code{model\_file} and \code{options\_file} are ambiguous and
+redundant. Hence they have been deleted from \code{HighsOptions}. When
+\HiGHS is run as an executable, these options are not redundant, so
+the corresponding command-line options are retained.
+
+The options \code{solution\_file}, \code{write\_solution\_to\_file}
+and \code{write\_solution\_pretty} have been retained in
+\code{HighsOptions}, but are only relevant when \HiGHS is run as an
+executable, and are set in the options file. In an application, they
+are redundant since their function is duplicated by parameters to
+methods that write the solution to a file.
+
+\section{Changed constants}
+Since the names of constants in \HiGHS now conform to the Google \Cpp
+style guide~\cite{GoogleStyleGuide}, numerous constants that may be
+used in \Cpp applications have changed name. Their values (when cast
+to integer if necessary) have not changed. The current and former
+names, together with integer values and short desription are given in
+Table~\ref{tab:ChangedConstants}.
+
+\begin{sidewaystable}
+\centerline{
+  \begin{tabular}{|l|l|r|p{10cm}|}\hline
+    Currently & Formerly & Value & Description \\\hline
+    \code{ObjSense::kMinimize} & \code{ObjSense::MINIMIZE} & -1 & Objective sense is minimize\\
+    \code{ObjSense::kMaximize} & \code{ObjSense::MAXIMIZE} &  1 & Objective sense is maximize\\\hline
+     \code{HighsBasisStatus::kLower} & \code{HighsBasisStatus::LOWER} & 0 & Variable is at its lower bound (including fixed variables)\\
+     \code{HighsBasisStatus::kBasic} & \code{HighsBasisStatus::BASIC} & 1 & Variable is basic \\
+     \code{HighsBasisStatus::kUpper} & \code{HighsBasisStatus::UPPER} & 2 & Variable is at its upper bound\\
+     \code{HighsBasisStatus::kZero} & \code{HighsBasisStatus::ZERO} & 3 & Free variable is nonbasic and set to zero\\
+     \code{HighsBasisStatus::kNonbasic} & \code{HighsBasisStatus::NONBASIC} & 4 & Variable is nonbasic with no specific bound information\\\hline
+    \end{tabular}}
+\caption{Changed Constants}\label{tab:ChangedConstants}
+\end{sidewaystable}
+
+\section{Deleted and deprecated methods}
+
+
+
+\bibliographystyle{abbrv}
+\bibliography{ref}
+
 
 \end{document}
