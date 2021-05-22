@@ -50,7 +50,7 @@ internal, but some changes will affect users and are documented here.
 
 This document is for people who are familiar with using \HiGHS and
 want to know what changes and new features there are in Version
-1.0.0. New users and those wanting a greater level of detail should
+1.0.0. New users, and those wanting a greater level of detail, should
 consult the full documentation in the Version 1.0.0 release document.
 
 \section{Summary of enhancements in Version 1.0.0}
@@ -68,7 +68,7 @@ document.
   sensitivity ranges for all costs, active bounds and basic variables
   are now available.
 \item When the solving of a model is interrupted without obtaining an
-  optimal solution, a primal and dual solution now available (where
+  optimal solution, a primal and dual solution is now available (where
   possible).
 \item The status of any primal or dual solution returned by \HiGHS is
   indicated by the value of the \code{HighsInfo} entries
@@ -80,8 +80,8 @@ document.
       \begin{tabular}{|l|l|p{8cm}|}\hline
         Value & \Cpp constant & Interpretation\\\hline
         0 & \code{kSolutionStatusNone} & There is no solution available \\
-        1 & \code{kSolutionStatusInfeasible} & An infeasible solutiuon is available\\
-        2 & \code{kSolutionStatusFeasible} &An feasible solutiuon is available\\\hline
+        1 & \code{kSolutionStatusInfeasible} & An infeasible solution is available\\
+        2 & \code{kSolutionStatusFeasible} &An feasible solution is available\\\hline
     \end{tabular}}
     \caption{Interpreting solution status values}\label{tab:HighsSolutionStatus}
   \end{table}
@@ -89,37 +89,38 @@ document.
 \item \HiGHS can now be used to presolve an LP or MIP, allowing users
   to extract the model. In a future release, \HiGHS will determine the
   optimal primal solution, dual solution or basis for the original
-  model given the corresponding data for the optimal solution of the
+  model, given the corresponding data for the optimal solution of the
   presolved model.
 \end{itemize}
 
 \section{Long integers}
-To allow larger models to be handled, it is now possible to compile
-\HiGHS so that it uses long (64-bit) integers in all cases. When built
-using \code{CMake}, this is achieved by setting
+By default, \HiGHS compiles with standard (32-bit) integers. However,
+to allow larger models to be handled, it is now possible to compile
+\HiGHS so that it uses long (64-bit) integers in all cases. This is
+achieved by setting the \code{CMake} parameter
 \code{-DHIGHSINT64=on}. The type \code{HighsInt} is then set to be
-\code{int64\_t} rather than \code{int}. By default, \HiGHS compiles
-with standard (32-bit) integers. Long integers are not currently
-supported by the \code{FORTRAN} interface. Since \HiGHS can be
-compiled with either standard or long integers, integer values are
+\code{int64\_t} rather than \code{int}. Long integers are not
+currently supported by the \code{FORTRAN} interface. Since \HiGHS can
+be compiled with either standard or long integers, integer values are
 referred to below anonymously as \code{integer}.
 
 \section{Model handling}
 Now that \HiGHS can solve MIPs and QPs, as well as LPs, model handling
-has been generalised. It is also now possible to pass or build the
+has been generalized. It is also now possible to pass or build the
 constraint matrix row-wise.
 
 \subsection{Model definition}
-Within \Cpp, the original \code{HighsLp} class was
-stretched to define MIPs, but a QP can't be argued to be a case of LP!
-Hence we have introduced a \code{HighsModel} class that can be used to
-define an LP, MIP or QP. Within the \code{Highs} class,
-\code{HighsModel} is passed to \HiGHS as an argument to
-\code{passModel}.
+Within \Cpp, the original \code{HighsLp} class was stretched to define
+MIPs, but a QP can't be argued to be a generalisation< of LP!  Hence
+we have introduced a \code{HighsModel} class that can be used to
+define an LP, MIP or QP. A \code{HighsLp} instance is a member of he
+class \code{HighsModel} class, allowing all uses of \code{HighsLp} to
+be maintained. Within the \code{Highs} class, \code{HighsModel} may be
+passed to \HiGHS as an argument to \code{passModel}.
 
 In the \C interface, for reasons discussed below, the definition of
-the \code{highs\_passLp} method to pass an LP has changed. There are
-also \C methods \code{highs\_passMip} and \code{highs\_passQp} to pass
+the \code{Highs\_passLp} method to pass an LP has changed. There are
+also \C methods \code{Highs\_passMip} and \code{Highs\_passQp} to pass
 MIP and QP problems.
 
 \subsubsection{Row-wise constraint matrix}
@@ -129,36 +130,36 @@ is often preferable for modelling interfaces and users to specify the
 constraint matrix row-wise. Hence the \code{HighsLp} and
 \code{HighsModel} classes have a \code{MatrixOrientation} member to
 specify whether the matrix is held row-wise or column-wise. In the \C
-interface, a \code{rowwise} parameter has been introduced to the
-parameter list of \code{highs\_passLp}.
+interface, \code{Highs\_passLp} now has a parameter to indicate
+whether the matrix is passed row-wise or column-wise.
 
 \subsubsection{Compatibility}
 For back-compatibility, the \code{HighsLp} class has been retained,
 and it is still possible to pass an LP or MIP to \HiGHS by giving
-\code{passModel} a \code{HighsLp} as an argument. However, to ensure
-future compatibility, users should pass a \code{HighsModel}.
+\code{passModel} a \code{HighsLp} instance as an argument. However, to
+ensure future compatibility, users should pass a \code{HighsModel}.
 
 \subsection{Model return}
 For \Cpp users, the \code{Highs} class contains a method
 \code{getModel} that returns a const reference to the internal
-\code{HighsModel}. The method \code{getLp} that returned a const
-reference to the internal \code{HighsLp} has been deleted from the
-\code{Highs} class.
+\code{HighsModel} instance. The method \code{getLp} that returns a
+const reference to the internal \code{HighsLp} instance has been
+retained.
 
 \section{Model status}
 
 The model status is a value that indicates the model's feasibility,
 unboundedness or whether an optimal solution has been obtained by the
-solver. The possible statuses that can occur, and the values that
-indicate the status, have changed for some edge cases. In particular,
-and consistent with commercial solvers, if a model is both primal and
-dual infeasible, \HiGHS no longer idetifies this: it will only
-indicate primal infeasibility. Again, as with commercial solvers, if a
-model is dual infeasible then, unless it is identified as being either
-primal infeasible, or primal unbounded, the \HiGHS model status will
-indicate it as being infeasible or unbounded.
+solver, as well as various (unlikely!) failure scenarios. The possible
+statuses that can occur have changed for some edge cases. In particular, and consistent with
+commercial solvers, if a model is both primal and dual infeasible,
+\HiGHS no longer identifies this: it will only indicate primal
+infeasibility. Again, as with commercial solvers, if a model is dual
+infeasible then, unless it is identified as being either primal
+infeasible, or primal unbounded, the \HiGHS model status will indicate
+it as being ``infeasible or unbounded''. 
 
-Within \Cpp the model status value is taken from an enum class
+Within \Cpp, the model status value is taken from an \code{enum class}
 \code{HighsModelStatus}. Since the names of constants in \HiGHS now
 conform to the Google \Cpp style guide~\cite{GoogleStyleGuide}, the entries of
 \code{HighsModelStatus} have changed. For the \C interface, entries of
@@ -232,11 +233,11 @@ Table~\ref{tab:HighsLogging}.
 
 \section{Deleted options}
 
-When \HiGHS is called from an application, the options
-\code{model\_file} and \code{options\_file} are ambiguous and
-redundant. Hence they have been deleted from \code{HighsOptions}. When
-\HiGHS is run as an executable, these options are not redundant, so
-the corresponding command-line options are retained.
+When \HiGHS is called from an application, the \code{model\_file} and
+\code{options\_file} options are ambiguous and redundant. Hence they
+have been deleted from \code{HighsOptions}. When \HiGHS is run as an
+executable, these options are not redundant, so the corresponding
+command-line options are retained.
 
 The options \code{solution\_file}, \code{write\_solution\_to\_file}
 and \code{write\_solution\_pretty} have been retained in
@@ -250,7 +251,7 @@ Since the names of constants in \HiGHS now conform to the Google \Cpp
 style guide~\cite{GoogleStyleGuide}, numerous constants that may be
 used in \Cpp applications have changed name. Their values (when cast
 to integer if necessary) have not changed. The current and former
-names, together with integer values and short desription are given in
+names, together with integer values and short description are given in
 Table~\ref{tab:ChangedConstants}.
 
 \begin{sidewaystable}
@@ -270,24 +271,23 @@ Table~\ref{tab:ChangedConstants}.
 
 \section{Deleted and deprecated methods}
 
-To allow progress and keep the \HiGHS software engineering within the
-resources available, a small number of methods have been deleted, and
-a rather larger number are deprecated. These can be expected to be
-deleted in future versions of \HiGHS.
+To allow progress and keep the \HiGHS software engineering demands
+within the resources available, a small number of methods have been
+deleted, and a rather larger number are deprecated. These can be
+expected to be deleted in future versions of \HiGHS.
 
 \subsection{Deleted methods}
 
-As well as deleting \code{getLp} from the \code{Highs} class, three
-methods have been deleted from the \C interface. These are
-\code{Highs\_modelStatusToChar}, \code{Highs\_solutionStatusToChar} and
-\code{Highs\_highsModelStatusToChar} since they fail on Windows and
-MacOS (but not on Linux).
+Three methods have been deleted from the \C interface. These are
+\code{Highs\_modelStatusToChar}, \code{Highs\_solutionStatusToChar}
+and \code{Highs\_highsModelStatusToChar} since they fail on Windows
+and MacOS (but not on Linux).
 
 \subsection{Deprecated methods}
 
 The deprecated methods in the \Cpp \HiGHS class, the corresponding
 method(s) in the \C interface and their replacements (where relevant)
-are listed in Table~\ref{tab:DeprecatedMethods}. The first two relate
+are listed in Table~\ref{tab:DeprecatedMethodsCpp}. The first two relate
 to the old logging system, and both now set the option
 \code{output\_flag} to false, stopping any logging from \HiGHS: they
 will soon be deleted. Early versions of \HiGHS had a dedicated method
@@ -302,9 +302,11 @@ case of the \HiGHS class, ``Highs'' is implied by the class name, and
 in the \C interface, the method names are distinguished as belonging
 to \HiGHS by beginning ``\code{Highs\_}''.
 
+Deprecated methods in the \C interface are listed in Table~\ref{tab:DeprecatedMethodsC}
+
 \begin{sidewaystable}
 \centerline{
-  \begin{tabular}{|l|p{7cm}|l|p{5cm}|}\hline
+  \begin{tabular}{|l|p{7cm}|l|p{6cm}|}\hline
 \multicolumn2{|c|}{Deprecated}&\multicolumn2{c|}{Replacement}\\\hline
 \Cpp \HiGHS class & \C interface equivalent(s) & \Cpp & \C equivalent(s) \\\hline
 \code{setHighsLogfile} & \code{Highs\_setHighsLogfile} & \multicolumn2{c|}{None: redundant due to logging change}\\
@@ -312,21 +314,50 @@ to \HiGHS by beginning ``\code{Highs\_}''.
 \code{getSimplexIterationCount} &
 \code{Highs\_getSimplexIterationCount};
 \code{Highs\_getIterationCount} & \code{getInfo} & \code{Highs\_getIntInfoValue} \\\hline
-\code{setHighsOptionValue} & \code{Highs\_setHighsOptionValue} & \code{setOptionValue} & \code{Highs\_setOptionValue}\\
+\code{setHighsOptionValue} &
+\code{Highs\_setHighsBoolOptionValue};
+\code{Highs\_setHighsIntOptionValue};
+\code{Highs\_setHighsDoubleOptionValue};
+\code{Highs\_setHighsStringOptionValue}
+& \code{setOptionValue} &
+\code{Highs\_setBoolOptionValue};
+\code{Highs\_setIntOptionValue};
+\code{Highs\_setDoubleOptionValue};
+\code{Highs\_setStringOptionValue} \\
 \code{readHighsOptions} & \code{Highs\_readHighsOptions} & \code{readOptions} & \code{Highs\_readOptions}\\
 \code{passHighsOptions} & \code{Highs\_passHighsOptions} & \code{passOptions} & \code{Highs\_passOptions}\\
-\code{getHighsOptionValue} & \code{Highs\_getHighsOptionValue} & \code{getOptionValue} & \code{\_getHighsOptionValue}\\
+\code{getHighsOptionValue} &
+\code{Highs\_getHighsBoolOptionValue};
+\code{Highs\_getHighsIntOptionValue};
+\code{Highs\_getHighsDoubleOptionValue};
+\code{Highs\_getHighsStringOptionValue}
+& \code{getOptionValue} &
+\code{Highs\_getBoolOptionValue};
+\code{Highs\_getIntOptionValue};
+\code{Highs\_getDoubleOptionValue};
+\code{Highs\_getStringOptionValue}\\
 \code{getHighsOptions} & \code{Highs\_getHighsOptions} & \code{getOptions} & \code{Highs\_getOptions}\\
 \code{resetHighsOptions} & \code{Highs\_resetHighsOptions} & \code{resetOptions} & \code{Highs\_resetOptions}\\
 \code{writeHighsOptions} & \code{Highs\_writeHighsOptions} & \code{writeOptions} & \code{Highs\_writeOptions}\\
 \code{getHighsInfo} & \code{Highs\_getHighsInfo} & \code{getInfo} & \code{Highs\_getInfo}\\
-\code{getHighsInfoValue} & \code{Highs\_getHighsInfoValue} & \code{getInfoValue} & \code{Highs\_getInfoValue}\\
+\code{getHighsInfoValue} & \code{Highs\_getHighsIntInfoValue}; \code{Highs\_getHighsDoubleInfoValue} & \code{getInfoValue} & \code{Highs\_getIntInfoValue}; \code{Highs\_getDoubleInfoValue} \\
 \code{writeHighsInfo} & \code{Highs\_writeHighsInfo} & \code{writeInfo} & \code{Highs\_writeInfo}\\
 \code{getHighsInfinity} & \code{Highs\_getHighsInfinity} & \code{getInfinity} & \code{Highs\_getInfinity}\\
 \code{getHighsRunTime} & \code{Highs\_getHighsRunTime} & \code{getRunTime} & \code{Highs\_getRunTime}\\\hline
     \end{tabular}}
-\caption{Deprecated methods}\label{tab:DeprecatedMethods}
+\caption{Deprecated methods}\label{tab:DeprecatedMethodsCpp}
 \end{sidewaystable}
+
+\begin{table}
+\centerline{
+  \begin{tabular}{|p{5cm}|p{9cm}|}\hline
+Deprecated&Replacement\\\hline
+\code{Highs\_call} & \code{Highs\_lpCall}; \code{Highs\_mipCall} ; \code{Highs\_qpCall} \\
+\code{Highs\_runQuiet} & None: redundant due to logging change\\
+\code{Highs\_getHighsOptionType}& \code{Highs\_getOptionType}\\\hline
+    \end{tabular}}
+\caption{Deprecated \C methods}\label{tab:DeprecatedMethodsC}
+\end{table}
 
 
 \bibliographystyle{abbrv}
