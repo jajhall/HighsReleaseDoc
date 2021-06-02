@@ -1,0 +1,158 @@
+\documentclass[a4paper,12pt,twoside]{article}
+\usepackage{xspace}
+\usepackage{url}
+\usepackage{relsize}
+\usepackage{calc}
+\usepackage{dimensions}
+\usepackage{rotating}
+\usepackage{colortbl}
+
+\input Alias
+
+\title{
+\HiGHS Version 1.0.0}
+\date{\today}
+\author{J. A. J. Hall}
+
+\flushbottom
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+
+%\pagenumbering{roman}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+%
+\HiGHS was developed from the dual simplex solver of
+Huangfu~\cite{HuHa13} by adding the interior point method solver (for
+LP problems) of Schork~\cite{ScGo20}, the MIP solver of Gottwald, and
+the convex QP solver of Feldmeier. Its presolve for LP and MIP was
+written by Galabova and Gottwald, and its primal simplex solver was
+written by Hall, based on work by Huangfu. Other features have been
+written by Hall.
+
+\HiGHS is mainly written in \Cpp with \OpenMP directives, but also has
+some \C. The primary interface to \HiGHS is via \Cpp, but it also has full
+interfaces for \C, \Csharp, \Fortran and \Python. There are also
+third-party interfaces to \HiGHS from \Julia, \Rust and \Javascript.
+This document describes the \Cpp interface and corresponding \C
+interface methods. The other interfaces are analogous to the \C
+interface.
+
+\HiGHS uses \CMake as a build system and requires version 3.15. It has
+been developed and tested on various Linux, MacOS and Windows
+installations using both the GNU (\gpp) and Intel (\icc) \Cpp
+compilers. Note that HiGHS requires (at least) version 4.9 of the GNU
+compiler. If \OpenMP is unavailable to \HiGHS, then it will compile,
+but will run in serial. \HiGHS has no third-party dependencies.
+
+Although \HiGHS is freely available under the MIT license, we would be
+pleased to learn about users' experience and give advice via email
+sent to \HiGHSemail. If you use \HiGHS in an academic context, please
+acknowledge this and cite the article of Huangfu and
+Hall~\cite{HuHa13}, unless you make specific use of the interior point
+method solver, in which case you should cite the work of Schork and
+Gondzio~\cite{ScGo20}.
+
+\subsection{Long integers}
+%
+\input HighsInt
+
+\section{Problem definition}
+%
+Problems in \HiGHS are defined as an instance of the \code{HighsModel}
+class. This consists of one instance of the \code{HighsHessian} class,
+and one instance of the \code{HighsLp} class. Communication of models
+to and from \HiGHS is possible via instances of the \code{HighsLp} or
+\code{HighsModel} class. In the \C and other interfaces, communication
+of models is via scalar values and addresses of vectors.
+\subsection{The \code{HighsLp} class}
+The \code{HighsLp} class allows LP and MIP problems of the form
+$$
+\begin{array}{rl}
+  \mathrm{minimize/maximize}&f+\bfc^T\bfx\\
+  \mathrm{subject~to}&\bfL\le A\bfx\le \bfU\\
+    &\bfl\le\bfx\le\bfu\\
+  &\{x_i: i\in\SetI\}\in\Z
+  \end{array}
+$$
+to be defined, and has the following members.
+\begin{itemize}
+\item \code{\HighsInt \numCol}: Number of columns (variables) $\bfx$ in the model
+\item \code{\HighsInt \numRow}: Number of rows (constraints) in the model
+\item \code{std::vector<\HighsInt> \Astart}: Start of each constraint matrix vector in the compressed sparse storage
+\item \code{std::vector<\HighsInt> \Aindex}: Indices of each constraint matrix vector in the compressed sparse storage
+\item \code{std::vector<double> \Avalue}: Values of each constraint matrix vector in the compressed sparse storage
+\item \code{std::vector<double> \colCost}: Cost (gradient) vector $\bfc$ in the objective function
+\item \code{std::vector<double> \colLower}: Lower bounds $\bfl$ on the columns
+\item \code{std::vector<double> \colUpper}: Upper bounds $\bfu$ on the columns
+\item \code{std::vector<double> \rowLower}: Lower bounds $\bfL$ on the rows
+\item \code{std::vector<double> \rowUpper}: Upper bounds $\bfU$ on the rows
+\item \code{MatrixOrientation \orientation}: Orientation of the constraint matrix
+\item \code{ObjSense \sense}: Sense of the objective: minimize or maximize
+\item \code{double \offset}: Constant term $f$ in the objective function
+\item \code{std::string \modelName}: The name of the model
+\item \code{std::vector<std::string> \colName}: The names of the columns
+\item \code{std::vector<std::string> \rowName}: The names of the rows
+\item \code{std::vector<HighsVarType> \integrality}: The set $\SetI$ of integrality restrictions on columns
+\end{itemize}
+
+
+\subsubsection{Constraint matrix}
+%
+The constraint matrix is held using compressed sparse storage. Users
+unfamiliar with this format should consult
+Wikipedia~\cite{WikiSparseMatrix}. Since solvers generally access the
+constraint matrix column-wise, this was originally the only
+orientation permitted by \HiGHS. However, it is often preferable for
+modelling interfaces and users to specify the constraint matrix
+row-wise. The \orientation member of the \code{HighsLp}
+class is used to specify whether the matrix is held row-wise or
+column-wise. If the orientation is not specified, it is assumed to be
+\inred{???-wise}. In the \C interface, an \HighsInt parameter indicates
+whether the matrix is \inred{row-wise (2) or column-wise (1)}.
+
+\subsubsection{Objective function}
+%
+The sense of the objective (minimize or maximize) is defined by the
+\sense member of the \code{HighsLp} class. If the sense is not
+specified, the objecitve is minimized. In the \C interface, an
+\HighsInt parameter indicates whether the matrix is to be minimized
+(1) or maximized (-1).
+
+\subsubsection{Names}
+%
+When populating an instance of the \code{HighsLp} class, no name data
+needs to be supplied, and name data cannot be supplied via the \C
+interface. The \modelName member of the \code{HighsLp} class is the
+name of the model, and is used occasionally in logging output. By
+default it is an empty string. If the model is read from a data file,
+then \modelName is the name of the file (less its extension). The
+\colName and \rowName members of the \code{HighsLp} class are, by
+default, of zero size. If the model is read from an MPS data file,
+then \colName and \rowName contain its column and row names. If names
+are available they are printed when \HiGHS writes the model or
+solution.
+
+\subsubsection{Integrality}
+%
+The \integrality member of the \code{HighsLp} class indicates which
+variables (if any) must take integer values. If this member is of zero
+size, or if all its entries are \code{HighsVarType::kContinuous}, the
+set $\SetI$ is interpreted as being empty, so the instance is
+interpreted as being an LP. If entries of \integrality are
+\code{HighsVarType::kInteger} then, by default, the \HiGHS MIP solver
+will be used to find the optimal integer values of the corresponding
+variables. In the \C interface, an \HighsInt indicates whether a
+particular variable is continous (0) or must take an integer value
+(1).
+
+
+
+\bibliographystyle{abbrv}
+\bibliography{ref}
+
+
+\end{document}

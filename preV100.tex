@@ -5,24 +5,9 @@
 \usepackage{calc}
 \usepackage{dimensions}
 \usepackage{rotating}
+\usepackage{colortbl}
 
-\newcommand{\Rplus}{\protect\hspace{-.1em}\protect\raisebox{.35ex}{\smaller{\smaller\textbf{+}}}}
-\newcommand{\CMake}{\texttt{CMake}\xspace}
-\newcommand{\HiGHS}{\texttt{HiGHS}\xspace}
-\newcommand{\OpenMP}{\texttt{OpenMP}\xspace}
-\newcommand{\HiGHStextURL}{http:/\!/www.HiGHS.dev/}%{http:/\!/www.highs.dev/}
-
-\newcommand{\cmake}{\CMake}
-\newcommand{\highs}{\HiGHS}
-\newcommand{\openmp}{\OpenMP}
-
-\newcommand{\C}{\mbox{C}\xspace}
-\newcommand{\Cpp}{\mbox{C\Rplus\Rplus}\xspace}
-
-
-\def\code#1{\texttt{#1}}
-\def\file#1{\texttt{#1}}
-
+\input Alias
 
 \title{
 \HiGHS pre-release document}
@@ -94,15 +79,7 @@ document.
 \end{itemize}
 
 \section{Long integers}
-By default, \HiGHS compiles with standard (32-bit) integers. However,
-to allow larger models to be handled, it is now possible to compile
-\HiGHS so that it uses long (64-bit) integers in all cases. This is
-achieved by setting the \code{CMake} parameter
-\code{-DHIGHSINT64=on}. The type \code{HighsInt} is then set to be
-\code{int64\_t} rather than \code{int}. Long integers are not
-currently supported by the \code{FORTRAN} interface. Since \HiGHS can
-be compiled with either standard or long integers, integer values are
-referred to below anonymously as \code{integer}.
+\input HighsInt
 
 \section{Model handling}
 Now that \HiGHS can solve MIPs and QPs, as well as LPs, model handling
@@ -127,11 +104,11 @@ MIP and QP problems.
 Since solvers generally access the constraint matrix column-wise, this
 was originally the only orientation permitted by \HiGHS. However, it
 is often preferable for modelling interfaces and users to specify the
-constraint matrix row-wise. Hence the \code{HighsLp} and
-\code{HighsModel} classes have a \code{MatrixOrientation} member to
-specify whether the matrix is held row-wise or column-wise. In the \C
-interface, \code{Highs\_passLp} now has a parameter to indicate
-whether the matrix is passed row-wise or column-wise.
+constraint matrix row-wise. Hence the \code{HighsLp} class has an
+\orientation member to specify whether the matrix is held
+row-wise or column-wise. In the \C interface, \code{Highs\_passLp} now
+has a parameter to indicate whether the matrix is passed row-wise or
+column-wise.
 
 \subsubsection{Compatibility}
 For back-compatibility, the \code{HighsLp} class has been retained,
@@ -224,7 +201,7 @@ Table~\ref{tab:HighsLogging}.
     \code{output\_flag} & \code{bool} & \code{true} & Determines whether there is logging output from \HiGHS\\
     \code{log\_to\_console} & \code{bool} & \code{true} & Determines whether any logging output from \HiGHS goes to the console\\
     \code{log\_file} & \code{string} & \file{Highs.log} & Allows the name of the logging file to be changed
-    %    \\\code{log\_dev\_level} & \code{integer} &
+    %    \\\code{log\_dev\_level} & \HighsInt &
     \\\hline
     \end{tabular}}
 \caption{Logging options}\label{tab:HighsLogging}
