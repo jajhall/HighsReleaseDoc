@@ -56,19 +56,42 @@ Hall~\cite{HuHa13}, unless you make specific use of the interior point
 method solver, in which case you should cite the work of Schork and
 Gondzio~\cite{ScGo20}.
 
+\subsection{Overview}
+
+Models are either passed to \HiGHS directly, or read from data
+files. The definition of model data is set out in
+Section~\ref{sect:ModelDefinition}. Section~\ref{sect:ModelSolution}
+describes how \HiGHS is used to solve models, and how the resulting
+solution data may be obtained. Models may be modified in ways set out
+in Section~\ref{sect:ModelModification}, and other functionality
+available within \HiGHS is covered in
+Section~\ref{sect:OtherFeatures}. The parameters that control how
+\HiGHS runs are referred to as \code{HighsOptions} values or, more
+simply, as ``options''. Their definition, default values and the means
+of modifying them are defined in Section~\ref{sect:Options}.
+
 \subsection{Long integers}
 %
 \input HighsInt
 
-\section{Problem definition}
+\subsection{Terminology}
 %
-Problems in \HiGHS are defined as an instance of the \code{HighsModel}
+The word ``vector'' is used to refer to the mathematical object in the
+definition of a model. Within code, the corresponding data structure
+is referred to as an array.
+
+\section{Model definition}\label{sect:ModelDefinition}
+%
+Models in \HiGHS are defined as an instance of the \code{HighsModel}
 class. This consists of one instance of the \code{HighsHessian} class,
 and one instance of the \code{HighsLp} class. Communication of models
 to and from \HiGHS is possible via instances of the \code{HighsLp} or
 \code{HighsModel} class. In the \C and other interfaces, communication
-of models is via scalar values and addresses of vectors.
-\subsection{The \code{HighsLp} class}
+of models is via scalar values and addresses of arrays.
+
+\subsection{The \code{HighsLp} class}\label{sect:HighsLp}
+%
+
 The \code{HighsLp} class allows LP and MIP problems of the form
 $$
 \begin{array}{rl}
@@ -80,29 +103,29 @@ $$
 $$
 to be defined, and has the following members.
 \begin{itemize}
-\item \code{\HighsInt \numCol}: Number of columns (variables) $\bfx$ in the model
-\item \code{\HighsInt \numRow}: Number of rows (constraints) in the model
-\item \code{std::vector<\HighsInt> \Astart}: Start of each constraint matrix vector in the compressed sparse storage
-\item \code{std::vector<\HighsInt> \Aindex}: Indices of each constraint matrix vector in the compressed sparse storage
-\item \code{std::vector<double> \Avalue}: Values of each constraint matrix vector in the compressed sparse storage
-\item \code{std::vector<double> \colCost}: Cost (gradient) vector $\bfc$ in the objective function
-\item \code{std::vector<double> \colLower}: Lower bounds $\bfl$ on the columns
-\item \code{std::vector<double> \colUpper}: Upper bounds $\bfu$ on the columns
-\item \code{std::vector<double> \rowLower}: Lower bounds $\bfL$ on the rows
-\item \code{std::vector<double> \rowUpper}: Upper bounds $\bfU$ on the rows
-\item \code{MatrixOrientation \orientation}: Orientation of the constraint matrix
-\item \code{ObjSense \sense}: Sense of the objective: minimize or maximize
-\item \code{double \offset}: Constant term $f$ in the objective function
-\item \code{std::string \modelName}: The name of the model
-\item \code{std::vector<std::string> \colName}: The names of the columns
-\item \code{std::vector<std::string> \rowName}: The names of the rows
-\item \code{std::vector<HighsVarType> \integrality}: The set $\SetI$ of integrality restrictions on columns
+\item \HighsInt \numCol: Number of columns (variables) $\bfx$ in the model
+\item \HighsInt \numRow: Number of rows (constraints) in the model
+\item \VectorHighsInt \Astart: Start of each vector of $A$ in the compressed sparse storage
+\item \VectorHighsInt \Aindex: Indices of each vector of $A$ in the compressed sparse storage
+\item \VectorDouble \Avalue: Values of each vector of $A$ in the compressed sparse storage
+\item \VectorDouble \colCost: Cost (gradient) vector $\bfc$ in the objective function
+\item \VectorDouble \colLower: Lower bounds $\bfl$ on the columns
+\item \VectorDouble \colUpper: Upper bounds $\bfu$ on the columns
+\item \VectorDouble \rowLower: Lower bounds $\bfL$ on the rows
+\item \VectorDouble \rowUpper: Upper bounds $\bfU$ on the rows
+\item \MatrixOrientation \orientation: Orientation of the constraint matrix
+\item \ObjSense \sense: Sense of the objective: minimize or maximize
+\item \Double \offset: Constant term $f$ in the objective function
+\item \String \modelName: The name of the model
+\item \VectorString \colName: The names of the columns
+\item \VectorString \rowName: The names of the rows
+\item \VectorHighsVarType \integrality: The set $\SetI$ of integrality restrictions on columns
 \end{itemize}
 
-
+Since \HiGHS is written in \Cpp and \C, all indexing begins from zero.
 \subsubsection{Constraint matrix}
 %
-The constraint matrix is held using compressed sparse storage. Users
+The constraint matrix $A$ is held using compressed sparse storage. Users
 unfamiliar with this format should consult
 Wikipedia~\cite{WikiSparseMatrix}. Since solvers generally access the
 constraint matrix column-wise, this was originally the only
@@ -114,11 +137,18 @@ column-wise. If the orientation is not specified, it is assumed to be
 \inred{???-wise}. In the \C interface, an \HighsInt parameter indicates
 whether the matrix is \inred{row-wise (2) or column-wise (1)}.
 
+If the constraint matrix $A$ is held column-wise (row-wise) then the
+size of \Astart must be at least \numColPone (\numRowPone), the
+zero'th entry of \Astart must be zero, and entry \numCol (\numRow) is
+the number of entries in the arrays \Aindex and \Avalue. Other
+requirements are discussed in
+Section~\ref{sect:ConstraintMatrixValidation}.
+
 \subsubsection{Objective function}
 %
 The sense of the objective (minimize or maximize) is defined by the
 \sense member of the \code{HighsLp} class. If the sense is not
-specified, the objecitve is minimized. In the \C interface, an
+specified, the objective is minimized. In the \C interface, an
 \HighsInt parameter indicates whether the matrix is to be minimized
 (1) or maximized (-1).
 
@@ -146,13 +176,195 @@ interpreted as being an LP. If entries of \integrality are
 \code{HighsVarType::kInteger} then, by default, the \HiGHS MIP solver
 will be used to find the optimal integer values of the corresponding
 variables. In the \C interface, an \HighsInt indicates whether a
-particular variable is continous (0) or must take an integer value
+particular variable is continuous (0) or must take an integer value
 (1).
 
+\subsection{The \code{HighsHessian} class}\label{sect:HighsHessian}
+%
+The \code{HighsHessian} class allows the \code{HighsModel} class to
+represent the Hessian matrix of the quadratic term in the objective
+function that distinguishes QP problems from LP problems. The
+representation of the Hessian matrix is column-wise, and
+\code{HighsHessian} class has the following members.
 
+\begin{itemize}
+\item \HighsInt \Qdim: Number of columns in the Hessian matrix
+\item \VectorHighsInt \Qstart: Start of each column in the compressed sparse column storage
+\item \VectorHighsInt \Qindex: Indices of each column in the compressed sparse column storage
+\item \VectorDouble \Qvalue: Values of each column in the compressed sparse column storage
+\end{itemize}
+
+If a \code{HighsHessian} instance has a positive value for \Qdim, and
+the number of nonzeros in $Q$ is positive, then \Qdim must be equal to
+\numCol. As with the column-wise constraint matrix, the size of
+\Qstart must be at least \QdimPone, the zero'th entry of \Qstart must be
+zero, and entry \Qdim is the number of entries in the arrays \Qindex
+and \Qvalue. Other
+requirements are discussed in
+Section~\ref{sect:HessianMatrixValidation}.
+
+\subsection{Model validation}\label{sect:ModelValidation}
+
+When \HiGHS obtains a new model, it is validated for correctness and
+extreme data values. Control of the latter is determined by option
+values.
+
+\subsubsection{Constraint matrix validation}\label{sect:ConstraintMatrixValidation}
+
+There is considerable scope for errors when defining a matrix in
+compressed vector form. Thus, \HiGHS validates any such data supplied
+to it. The zero'th entry of the \Astart array must be zero, and
+entries must increase monotonically. This will not be strict if the
+matrix contains zero vectors. The \Aindex entries corresponding to a
+particular vector must be non-negative, must not be greater than or
+equal to the (full) vector dimension, and there must be no duplicate
+entries. If the data fails to satisfy any of these conditions, \HiGHS
+will return an error.
+
+There are limits on the minimum and maximum absolute values in the
+constraint matrix that \HiGHS will use. These limits are
+\code{HighsOptions} values \SmallMatrixValue and
+\LargeMatrixValue. Any entries below \SmallMatrixValue in absolute
+value are ignored (with a warning) but entries found to be greater
+than \LargeMatrixValue in absolute value will cause \HiGHS to return
+with an error.
+
+\subsubsection{Cost validation}\label{sect:CostValidation}
+
+In \Cpp, if the size of \colCost is less than \numCol then \HiGHS
+will return an error. Any entries found to be greater
+than \InfiniteCost in absolute value will cause \HiGHS to return
+with \inred{a warning or an error}.
+
+
+\subsubsection{Bound validation}\label{sect:BoundValidation}
+
+In \Cpp, if the size of \colLower or \colUpper is less than \numCol,
+or if the size of \rowLower or \rowUpper is less than \numRow, then
+\HiGHS will return an error. Any lower bound found to be greater than
+or equal to \InfiniteBound, or any upper bound found to be less than
+or equal to -\InfiniteBound, will cause \HiGHS to return with an error.
+
+Bounds that are inconsistent due to the lower bound exceeding the
+upper bound are permitted in \HiGHS but, when found, a warning message
+will be issued. If \HiGHS is asked to solve a model with inconsistent
+bounds, it will identify it as being infeasible.
+
+Any lower bounds found to be less than or equal to -\InfiniteBound
+will be ignored (treated as if they were negative infinity).  Any
+upper bounds found to be greater than or equal to \InfiniteBound will
+be ignored (treated as if they were positive infinity). \HiGHS will
+report the number of bounds ignored in this way.
+
+\subsubsection{Hessian matrix validation}\label{sect:HessianMatrixValidation}
+
+An instance of the \code{HighsHessian} class is validated for illegal
+indexing in the same way as the constraint matrix. To discuss the
+interpretation of the values in the instance, let $G$ be the
+corresponding matrix. \HiGHS determines the matrix
+$Q=\frac{1}{2}(G+G^T)$ and assesses its values the same way as the
+constraint matrix, using the same option values for small and large
+entries. If $Q$ is identically zero, then the \code{HighsHessian}
+instance is ignored, so the model will be solved as an LP. Otherwise,
+$Q$ will be used as the quadratic term in the objective function.
+
+As well as guaranteeing that the QP solver operates with a symmetric
+Hessian matrix, this allows flexibility in the definition of the
+Hessian matrix. If the original \code{HighsHessian} instance
+represents an entire symmetric matrix then, clearly, $Q=G$. However,
+it may be convenient to for $G$ to be only the strictly upper
+(equivalently lower) triangular portion of the Hessian, in which case
+its strictly off-diagonal entries must be double the value in the
+entire symmetric matrix.
+
+The \HiGHS QP solver is for strictly convex problems: those with
+positive definite Hessian. It will return with an error if it
+identifies non-convexity. Since an {\em a priori\/} test of strict
+convexity is a significant overhead, the only convexity test that is
+performed is a check that all the diagonal entries of $Q$ are at least
+\SmallMatrixValue.
+
+
+\section{Model solution}\label{sect:ModelSolution}
+
+
+
+\section{Model modification}\label{sect:ModelModification}
+
+\section{Other features}\label{sect:OtherFeatures}
+
+\section{Options}\label{sect:Options}
+
+\begin{itemize}
+\item \Double \InfiniteCost
+\item \Double \InfiniteBound
+\item \Double \SmallMatrixValue
+\item \Double \LargeMatrixValue
+\item \Double \PrimalFeasibilityTolerance
+\item \Double \DualFeasibilityTolerance
+\item \Double \IpmOptimalityTolerance
+\item \Double \ObjectiveBound
+\item \Double \ObjectiveTarget
+\item \HighsInt \HighsRandomSeed
+\item \HighsInt \HighsDebugLevel
+\item \HighsInt \HighsAnalysisLevel
+\item \HighsInt \SimplexStrategy
+\item \HighsInt \SimplexScaleStrategy
+\item \HighsInt \SimplexCrashStrategy
+\item \HighsInt \SimplexDualEdgeWeightStrategy
+\item \HighsInt \SimplexPrimalEdgeWeightStrategy
+\item \HighsInt \SimplexIterationLimit
+\item \HighsInt \SimplexUpdateLimit
+\item \HighsInt \IpmIterationLimit
+\item \HighsInt \HighsMinThreads
+\item \HighsInt \HighsMaxThreads
+\item \String \SolutionFile
+\item \String \LogFile
+\item \Bool \WriteSolutionToFile
+\item \Bool \WriteSolutionPretty
+\item \Bool \OutputFlag
+\item \Bool \LogToConsole
+\item \HighsInt \LogDevLevel
+\item \Bool \RunCrossover
+\item \Bool \AllowUnboundedOrInfeasible
+\item \Bool \UseImpliedBoundsFromPresolve
+\item \Bool \MpsParserTypeFree
+\item \HighsInt \KeepNRows
+\item \HighsInt \AllowedSimplexMatrixScaleFactor
+\item \HighsInt \AllowedSimplexCostScaleFactor
+\item \HighsInt \SimplexDualiseStrategy
+\item \HighsInt \SimplexPermuteStrategy
+\item \Bool \DualSimplexCleanup
+\item \HighsInt \SimplexPriceStrategy
+\item \HighsInt \PresolveSubstitutionMaxfillin
+\item \Bool \SimplexInitialConditionCheck
+\item \Double \SimplexInitialConditionTolerance
+\item \Double \DualSteepestEdgeWeightLogErrorThreshold
+\item \Double \DualSimplexCostPerturbationMultiplier
+\item \Double \PrimalSimplexBoundPerturbationMultiplier
+\item \Double \PresolvePivotThreshold
+\item \Double \FactorPivotThreshold
+\item \Double \FactorPivotTolerance
+\item \Double \StartCrossoverTolerance
+\item \Bool \LessInfeasibleDseCheck
+\item \Bool \LessInfeasibleDseChooseRow
+\item \Bool \UseOriginalHfactorLogic
+\item \HighsInt \MipMaxNodes
+\item \HighsInt \MipMaxStallNodes
+\item \HighsInt \MipMaxLeaves
+\item \HighsInt \MipLpAgeLimit
+\item \HighsInt \MipPoolAgeLimit
+\item \HighsInt \MipPoolSoftLimit
+\item \HighsInt \MipPscostMinreliable
+\item \HighsInt \MipReportLevel
+\item \Double \MipFeasibilityTolerance
+\item \Double \MipEpsilon
+\item \Double \MipHeuristicEffort
+\end{itemize}
 
 \bibliographystyle{abbrv}
 \bibliography{ref}
 
 
 \end{document}
+
