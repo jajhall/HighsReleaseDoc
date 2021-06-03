@@ -25,6 +25,17 @@
 
 \section{Introduction}
 %
+This document defines what \HiGHS can do, and how it can be run and
+controlled externally. It does not describe the theory underlying the
+optimzation methods that it uses, how they implemented, or how \HiGHS
+is engineered internally. Mathematically, this document assumes no
+more than familiarity with the definition of a linear programming (LP)
+problem, and the fact that they can be solved with either the simplex
+algorithm or interior point methods. Although \HiGHS can solve
+mixed-integer programming (MIP) and quadratic programming (QP)
+problems, users who have no interest in doing so can ingore references
+to these problem classes.
+
 \HiGHS was developed from the dual simplex solver of
 Huangfu~\cite{HuHa13} by adding the interior point method solver (for
 LP problems) of Schork~\cite{ScGo20}, the MIP solver of Gottwald, and
@@ -58,6 +69,11 @@ Gondzio~\cite{ScGo20}.
 
 \subsection{Overview}
 
+Sections~\ref{sect:ModelDefinition}-~\ref{sect:Options} set out what
+\HiGHS can do and how it can be controlled. Section~\ref{sect:Methods}
+documents the methods in the \Highs class (\Cpp) and corresponding
+methods in the \C interface that are used to interact with \HiGHS.
+
 Models are either passed to \HiGHS directly, or read from data
 files. The definition of model data is set out in
 Section~\ref{sect:ModelDefinition}. Section~\ref{sect:ModelSolution}
@@ -66,9 +82,22 @@ solution data may be obtained. Models may be modified in ways set out
 in Section~\ref{sect:ModelModification}, and other functionality
 available within \HiGHS is covered in
 Section~\ref{sect:OtherFeatures}. The parameters that control how
-\HiGHS runs are referred to as \code{HighsOptions} values or, more
-simply, as ``options''. Their definition, default values and the means
-of modifying them are defined in Section~\ref{sect:Options}.
+\HiGHS runs are referred to as \HighsOptions values or, more simply,
+as ``options''. Their definition, default values and the means of
+modifying them are defined in
+Section~\ref{sect:Options}. Documentation of methods in the \Highs
+class (\Cpp) and corresponding methods in the \C interface is in
+Section~\ref{sect:Methods}.
+
+For convenience,
+Sections~\ref{sect:ModelDefinition}-~\ref{sect:Options} refer to the
+\Cpp data structures used in \HiGHS. The \C interface involves simpler
+items of data (scalar integer and double values, and pointers to
+integer and double arrays), but is significantly more verbose. Data
+items supplied to \HiGHS methods in the \C interface are used to
+populate the \Cpp data structures. Data are returned from \HiGHS
+methods as scalars or pointers into the \Cpp data structures that can
+be interpreted as arrays.
 
 \subsection{Long integers}
 %
@@ -78,21 +107,28 @@ of modifying them are defined in Section~\ref{sect:Options}.
 %
 The word ``vector'' is used to refer to the mathematical object in the
 definition of a model. Within code, the corresponding data structure
-is referred to as an array.
+is referred to as an array. The model within \HiGHS that has been
+passed, read or built, and possibly modified, is referred to as the
+``incumbent model''.
+
+\subsection{Style}
+
+For the \Cpp interface and, to an increasing extent internally, \HiGHS
+now conforms to the Google \Cpp style guide~\cite{GoogleStyleGuide}.
 
 \section{Model definition}\label{sect:ModelDefinition}
 %
-Models in \HiGHS are defined as an instance of the \code{HighsModel}
-class. This consists of one instance of the \code{HighsHessian} class,
-and one instance of the \code{HighsLp} class. Communication of models
-to and from \HiGHS is possible via instances of the \code{HighsLp} or
-\code{HighsModel} class. In the \C and other interfaces, communication
+Models in \HiGHS are defined as an instance of the \HighsModel
+class. This consists of one instance of the \HighsHessian class,
+and one instance of the \HighsLp class. Communication of models
+to and from \HiGHS is possible via instances of the \HighsLp or
+\HighsModel class. In the \C and other interfaces, communication
 of models is via scalar values and addresses of arrays.
 
-\subsection{The \code{HighsLp} class}\label{sect:HighsLp}
+\subsection{The \HighsLp class}\label{sect:HighsLp}
 %
 
-The \code{HighsLp} class allows LP and MIP problems of the form
+The \HighsLp class allows LP and MIP problems of the form
 $$
 \begin{array}{rl}
   \mathrm{minimize/maximize}&f+\bfc^T\bfx\\
@@ -131,7 +167,7 @@ Wikipedia~\cite{WikiSparseMatrix}. Since solvers generally access the
 constraint matrix column-wise, this was originally the only
 orientation permitted by \HiGHS. However, it is often preferable for
 modelling interfaces and users to specify the constraint matrix
-row-wise. The \orientation member of the \code{HighsLp}
+row-wise. The \orientation member of the \HighsLp
 class is used to specify whether the matrix is held row-wise or
 column-wise. If the orientation is not specified, it is assumed to be
 \inred{???-wise}. In the \C interface, an \HighsInt parameter indicates
@@ -147,20 +183,20 @@ Section~\ref{sect:ConstraintMatrixValidation}.
 \subsubsection{Objective function}
 %
 The sense of the objective (minimize or maximize) is defined by the
-\sense member of the \code{HighsLp} class. If the sense is not
+\sense member of the \HighsLp class. If the sense is not
 specified, the objective is minimized. In the \C interface, an
 \HighsInt parameter indicates whether the matrix is to be minimized
 (1) or maximized (-1).
 
 \subsubsection{Names}
 %
-When populating an instance of the \code{HighsLp} class, no name data
+When populating an instance of the \HighsLp class, no name data
 needs to be supplied, and name data cannot be supplied via the \C
-interface. The \modelName member of the \code{HighsLp} class is the
+interface. The \modelName member of the \HighsLp class is the
 name of the model, and is used occasionally in logging output. By
 default it is an empty string. If the model is read from a data file,
 then \modelName is the name of the file (less its extension). The
-\colName and \rowName members of the \code{HighsLp} class are, by
+\colName and \rowName members of the \HighsLp class are, by
 default, of zero size. If the model is read from an MPS data file,
 then \colName and \rowName contain its column and row names. If names
 are available they are printed when \HiGHS writes the model or
@@ -168,7 +204,7 @@ solution.
 
 \subsubsection{Integrality}
 %
-The \integrality member of the \code{HighsLp} class indicates which
+The \integrality member of the \HighsLp class indicates which
 variables (if any) must take integer values. If this member is of zero
 size, or if all its entries are \code{HighsVarType::kContinuous}, the
 set $\SetI$ is interpreted as being empty, so the instance is
@@ -179,13 +215,13 @@ variables. In the \C interface, an \HighsInt indicates whether a
 particular variable is continuous (0) or must take an integer value
 (1).
 
-\subsection{The \code{HighsHessian} class}\label{sect:HighsHessian}
+\subsection{The \HighsHessian class}\label{sect:HighsHessian}
 %
-The \code{HighsHessian} class allows the \code{HighsModel} class to
+The \HighsHessian class allows the \HighsModel class to
 represent the Hessian matrix of the quadratic term in the objective
 function that distinguishes QP problems from LP problems. The
 representation of the Hessian matrix is column-wise, and
-\code{HighsHessian} class has the following members.
+\HighsHessian class has the following members.
 
 \begin{itemize}
 \item \HighsInt \Qdim: Number of columns in the Hessian matrix
@@ -194,13 +230,12 @@ representation of the Hessian matrix is column-wise, and
 \item \VectorDouble \Qvalue: Values of each column in the compressed sparse column storage
 \end{itemize}
 
-If a \code{HighsHessian} instance has a positive value for \Qdim, and
-the number of nonzeros in $Q$ is positive, then \Qdim must be equal to
+If a \HighsHessian instance has a positive value for \Qdim, and the
+number of nonzeros in $Q$ is positive, then \Qdim must be equal to
 \numCol. As with the column-wise constraint matrix, the size of
-\Qstart must be at least \QdimPone, the zero'th entry of \Qstart must be
-zero, and entry \Qdim is the number of entries in the arrays \Qindex
-and \Qvalue. Other
-requirements are discussed in
+\Qstart must be at least \QdimPone, the zero'th entry of \Qstart must
+be zero, and entry \Qdim is the number of entries in the arrays
+\Qindex and \Qvalue. Other requirements are discussed in
 Section~\ref{sect:HessianMatrixValidation}.
 
 \subsection{Model validation}\label{sect:ModelValidation}
@@ -223,7 +258,7 @@ will return an error.
 
 There are limits on the minimum and maximum absolute values in the
 constraint matrix that \HiGHS will use. These limits are
-\code{HighsOptions} values \SmallMatrixValue and
+\HighsOptions values \SmallMatrixValue and
 \LargeMatrixValue. Any entries below \SmallMatrixValue in absolute
 value are ignored (with a warning) but entries found to be greater
 than \LargeMatrixValue in absolute value will cause \HiGHS to return
@@ -258,19 +293,19 @@ report the number of bounds ignored in this way.
 
 \subsubsection{Hessian matrix validation}\label{sect:HessianMatrixValidation}
 
-An instance of the \code{HighsHessian} class is validated for illegal
+An instance of the \HighsHessian class is validated for illegal
 indexing in the same way as the constraint matrix. To discuss the
 interpretation of the values in the instance, let $G$ be the
 corresponding matrix. \HiGHS determines the matrix
 $Q=\frac{1}{2}(G+G^T)$ and assesses its values the same way as the
 constraint matrix, using the same option values for small and large
-entries. If $Q$ is identically zero, then the \code{HighsHessian}
+entries. If $Q$ is identically zero, then the \HighsHessian
 instance is ignored, so the model will be solved as an LP. Otherwise,
 $Q$ will be used as the quadratic term in the objective function.
 
 As well as guaranteeing that the QP solver operates with a symmetric
 Hessian matrix, this allows flexibility in the definition of the
-Hessian matrix. If the original \code{HighsHessian} instance
+Hessian matrix. If the original \HighsHessian instance
 represents an entire symmetric matrix then, clearly, $Q=G$. However,
 it may be convenient to for $G$ to be only the strictly upper
 (equivalently lower) triangular portion of the Hessian, in which case
@@ -286,8 +321,93 @@ performed is a check that all the diagonal entries of $Q$ are at least
 
 
 \section{Model solution}\label{sect:ModelSolution}
+%
+When the incumbent model is solved, the solution data that is
+available from \HiGHS comes from four sources: the model status, a set
+of scalar information values, the solution of the model and the status
+of each variable and constraint.
+
+\subsection{The model status}
+%
+When the incumbent model is solved, \HiGHS will identify a model
+status. In \Cpp this value is taken from an \code{enum class}
+\HighsModelStatus, whose entries are listed in
+Table~\ref{tab:HighsModelStatus}. The corresponding integer values
+used in the \C interface are also listed.
+
+\begin{table}
+\centerline{
+  \begin{tabular}{|l|l|p{8cm}|}\hline
+Integer&\HighsModelStatus&Description\\\hline
+0&\code{kNotset}&Not set\\
+1&\code{kLoadError}&Error loading the model\\
+2&\code{kModelError}&Error in the model definition\\
+3&\code{kPresolveError}&Error presolving the model\\
+4&\code{kSolveError}&Error solving the model\\
+5&\code{kPostsolveError}&Error postsolving the model\\
+6&\code{kModelEmpty}&Model is empty\\
+7&\code{kOptimal}&Model solution is optimal\\
+8&\code{kInfeasible}&Model is (primal) infeasible \\
+9&\code{kUnboundedOrInfeasible}&Model is (primal) unbounded or infeasible\\
+10&\code{kUnbounded}&Model is (primal) unbounded\\
+11&\code{kObjectiveBound}&Any optimal objective is at least a given bound \\
+12&\code{kObjectiveTarget}&There is a feasible solution with at least a given target value \\
+13&\code{kTimeLimit}&The solution time limit has been reached\\
+14&\code{kIterationLimit}&The solution iteration limit has been reached\\
+15&\code{kUnknown}&The model status is unknown\\\hline
+  \end{tabular}}
+\caption{Model status values}\label{tab:HighsModelStatus}
+\end{table}
+
+\subsection{Scalar information}
+%
+
+\begin{itemize}
+\item \LongInt \HighsInfoMipNodeCount: Number of MIP nodes created
+\item \HighsInt \HighsInfoSimplexIterationCount: Cumulative number of simplex iterations performed
+\item \HighsInt \HighsInfoIpmIterationCount: Cumulative number of interior point iterations performed
+\item \HighsInt \HighsInfoCrossoverIterationCount: Cumulative number of crossover iterations performed
+\item \HighsInt \HighsInfoQpIterationCount: Cumulative number of QP solver iterations performed
+\item \HighsInt \HighsInfoPrimalSolutionStatus: Status of the primal solution
+\item \HighsInt \HighsInfoDualSolutionStatus: Status of the dual solution
+\item \Double \HighsInfoObjectiveFunctionValue: Objective function value
+\item \Double \HighsInfoMipDualBound: Dual bound from the MIP solover
+\item \Double \HighsInfoMipGap: Relative primal-dual gap from the MIP solover
+\item \HighsInt \HighsInfoNumPrimalInfeasibilities: Number of primal infeasibilities exceeding the tolerance
+\item \Double \HighsInfoMaxPrimalInfeasibility: Maximum primal infeasibility
+\item \Double \HighsInfoSumPrimalInfeasibilities: Sum of primal infeasibilities
+\item \HighsInt \HighsInfoNumDualInfeasibilities: Number of dual infeasibilities exceeding the tolerance
+\item \Double \HighsInfoMaxDualInfeasibility: Maximum dual infeasibility
+\item \Double \HighsInfoSumDualInfeasibilities: Sum of dual infeasibilities
+\end{itemize}
+
+\subsection{The model solution}
+%
+
+The \HighsSolution structure is used to extract the model solution from \HiGHS in the \Cpp interface. It has the following components
+\begin{itemize}
+\item \VectorDouble \HighsSolutionColValue: (Primal) solution values for columns (variables)
+\item \VectorDouble \HighsSolutionRowValue: (Primal) solution values for rows (constraints)
+\item \VectorDouble \HighsSolutionColDual: Dual values for columns
+\item \VectorDouble \HighsSolutionRowDual: Dual values for rows
+\end{itemize}
+%
+When the objective sense is switched, the dual optimality condition
+changes sign, and this is reflected in the sign of the dual
+values. The same data can be obtained via the \C interface.
 
 
+\subsection{The variable and constraint status}
+%
+\begin{itemize}
+\item \VectorHighsBasisStatus \HighsBasisColStatus: Status of the columns (variables)
+\item \VectorHighsBasisStatus \HighsBasisRowStatus: Status of the rows (constraints)
+\end{itemize}
+
+
+The solution data that is available from \HiGHS depends on the value
+of the model status, when it was identified, and how. If the model
+status corresponds to an error, then no solution data are available. When \HiGHS solves a model, it first applies a presolve procedure with the aim of reducing the dimension of the problem to be solved directly. If the model is identified as being infeasible during t is possible that 
 
 \section{Model modification}\label{sect:ModelModification}
 
@@ -361,6 +481,8 @@ performed is a check that all the diagonal entries of $Q$ are at least
 \item \Double \MipEpsilon
 \item \Double \MipHeuristicEffort
 \end{itemize}
+
+\section{Methods}\label{sect:Methods}
 
 \bibliographystyle{abbrv}
 \bibliography{ref}

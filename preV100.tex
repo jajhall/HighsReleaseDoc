@@ -137,10 +137,10 @@ infeasible, or primal unbounded, the \HiGHS model status will indicate
 it as being ``infeasible or unbounded''. 
 
 Within \Cpp, the model status value is taken from an \code{enum class}
-\code{HighsModelStatus}. Since the names of constants in \HiGHS now
+\HighsModelStatus. Since the names of constants in \HiGHS now
 conform to the Google \Cpp style guide~\cite{GoogleStyleGuide}, the entries of
-\code{HighsModelStatus} have changed. For the \C interface, entries of
-\code{HighsModelStatus} are cast to integers and, in general, the
+\HighsModelStatus have changed. For the \C interface, entries of
+\HighsModelStatus are cast to integers and, in general, the
 value associated with a given status has changed. The correspondence
 between current and former model status values is set out in
 Table~\ref{tab:HighsModelStatus}.
@@ -149,7 +149,7 @@ Table~\ref{tab:HighsModelStatus}.
 \centerline{
   \begin{tabular}{|p{8cm}|l|l|l|l|}\hline
 &\multicolumn2{c|}{Currently}&\multicolumn2{c|}{Formerly}\\\cline{2-5}
-    Description&Integer&\code{HighsModelStatus}&Integer&\code{HighsModelStatus}\\\hline
+    Description&Integer&\HighsModelStatus&Integer&\HighsModelStatus\\\hline
 Not set&0&\code{kNotset}&0&\code{NOTSET}\\
 Error loading the model&1&\code{kLoadError}&1&\code{LOAD\_ERROR}\\
 Error in the model definition&2&\code{kModelError}&2&\code{MODEL\_ERROR}\\
@@ -235,13 +235,13 @@ Table~\ref{tab:ChangedConstants}.
 \centerline{
   \begin{tabular}{|l|l|r|p{10cm}|}\hline
     Currently & Formerly & Value & Description \\\hline
-    \code{ObjSense::kMinimize} & \code{ObjSense::MINIMIZE} & -1 & Objective sense is minimize\\
-    \code{ObjSense::kMaximize} & \code{ObjSense::MAXIMIZE} &  1 & Objective sense is maximize\\\hline
-     \code{HighsBasisStatus::kLower} & \code{HighsBasisStatus::LOWER} & 0 & Variable is at its lower bound (including fixed variables)\\
-     \code{HighsBasisStatus::kBasic} & \code{HighsBasisStatus::BASIC} & 1 & Variable is basic \\
-     \code{HighsBasisStatus::kUpper} & \code{HighsBasisStatus::UPPER} & 2 & Variable is at its upper bound\\
-     \code{HighsBasisStatus::kZero} & \code{HighsBasisStatus::ZERO} & 3 & Free variable is nonbasic and set to zero\\
-     \code{HighsBasisStatus::kNonbasic} & \code{HighsBasisStatus::NONBASIC} & 4 & Variable is nonbasic with no specific bound information\\\hline
+    \ObjSenseMinimize & \code{ObjSense::MINIMIZE} & -1 & Objective sense is minimize\\
+    \ObjSenseMaximize & \code{ObjSense::MAXIMIZE} &  1 & Objective sense is maximize\\\hline
+    \HighsBasisStatusLower & \code{HighsBasisStatus::LOWER} & 0 & Variable is at its lower bound (including fixed variables)\\
+    \HighsBasisStatusBasic & \code{HighsBasisStatus::BASIC} & 1 & Variable is basic \\
+    \HighsBasisStatusUpper & \code{HighsBasisStatus::UPPER} & 2 & Variable is at its upper bound\\
+    \HighsBasisStatusZero & \code{HighsBasisStatus::ZERO} & 3 & Free variable is nonbasic and set to zero\\
+    \HighsBasisStatusNonbasic & \code{HighsBasisStatus::NONBASIC} & 4 & Variable is nonbasic with no specific bound information\\\hline
     \end{tabular}}
 \caption{Changed Constants}\label{tab:ChangedConstants}
 \end{sidewaystable}

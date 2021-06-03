@@ -7,10 +7,6 @@
 \newcommand{\HiGHStextURL}{\texttt{http:/\!/www.HiGHS.dev/}\xspace}
 \newcommand{\HiGHSemail}{\texttt{highsopt@gmail.com}\xspace}
 
-\newcommand{\cmake}{\CMake}
-\newcommand{\highs}{\HiGHS}
-\newcommand{\openmp}{\OpenMP}
-
 \newcommand{\C}{\mbox{C}\xspace}
 \newcommand{\Cpp}{\mbox{C\Rplus\Rplus}\xspace}
 \newcommand{\Csharp}{\mbox{C\#}\xspace}
@@ -24,6 +20,7 @@
 \def\file#1{\texttt{#1}}
 
 \newcommand{\HighsInt}{\code{integer}\xspace}
+\newcommand{\LongInt}{\code{int64\_t}\xspace}
 \newcommand{\Double}{\code{double}\xspace}
 \newcommand{\Bool}{\code{bool}\xspace}
 \newcommand{\String}{\code{std::string}\xspace}
@@ -31,11 +28,26 @@
 \newcommand{\VectorHighsInt}{\code{std::vector<integer>}\xspace}
 \newcommand{\VectorString}{\code{std::vector<std::string>}\xspace}
 %\newcommand{\Vector}{\code{std::vector<>}\xspace}
+\newcommand{\VectorHighsBasisStatus}{\code{std::vector<HighsBasisStatus>}\xspace}
 \newcommand{\VectorHighsVarType}{\code{std::vector<HighsVarType>}\xspace}
 
-\newcommand{\MatrixOrientation}{\code{MatrixOrientation}\xspace}
-\newcommand{\ObjSense}{\code{ObjSense}\xspace}
+%Classes, structs and enums
+\newcommand{\Highs}{\code{Highs}\xspace}
 
+\newcommand{\MatrixOrientation}{\code{MatrixOrientation}\xspace}
+
+\newcommand{\ObjSense}{\code{ObjSense}\xspace}
+\newcommand{\ObjSenseMinimize}{\code{ObjSense::kMinimize}\xspace}
+\newcommand{\ObjSenseMaximize}{\code{ObjSense::kMaximize}\xspace}
+
+% HighsModelStatus
+\newcommand{\HighsModelStatus}{\code{HighsModelStatus}\xspace}
+
+% HighsModel
+\newcommand{\HighsModel}{\code{HighsModel}\xspace}
+
+% HighsLp
+\newcommand{\HighsLp}{\code{HighsLp}\xspace}
 \newcommand{\numCol}{\code{num\_col\_}\xspace}
 \newcommand{\numRow}{\code{num\_row\_}\xspace}
 \newcommand{\Astart}{\code{a\_start\_}\xspace}
@@ -54,6 +66,8 @@
 \newcommand{\rowName}{\code{row\_name\_}\xspace}
 \newcommand{\integrality}{\code{integrality\_}\xspace}
 
+% HighsHessian
+\newcommand{\HighsHessian}{\code{HighsHessian}\xspace}
 \newcommand{\Qdim}{\code{dim\_}\xspace}
 \newcommand{\Qstart}{\code{q\_start\_}\xspace}
 \newcommand{\Qindex}{\code{q\_index\_}\xspace}
@@ -63,7 +77,46 @@
 \newcommand{\numRowPone}{\code{num\_row\_+1}\xspace}
 \newcommand{\QdimPone}{\code{dim\_+1}\xspace}
 
-% Options
+% HighsSolution
+\newcommand{\HighsSolution}{\code{HighsSolution}\xspace}
+\newcommand{\HighsSolutionColValue}{\code{col\_value}\xspace}
+\newcommand{\HighsSolutionRowValue}{\code{row\_value}\xspace}
+\newcommand{\HighsSolutionColDual}{\code{col\_dual}\xspace}
+\newcommand{\HighsSolutionRowDual}{\code{row\_dual}\xspace}
+
+% HighsBasis
+\newcommand{\HighsBasis}{\code{HighsBasis}\xspace}
+\newcommand{\HighsBasisColStatus}{\code{col\_status}\xspace}
+\newcommand{\HighsBasisRowStatus}{\code{row\_status}\xspace}
+\newcommand{\HighsBasisStatus}{\code{HighsBasisStatus}\xspace}
+\newcommand{\HighsBasisStatusLower}{\code{HighsBasisStatus::kLower}\xspace}
+\newcommand{\HighsBasisStatusBasic}{\code{HighsBasisStatus::kBasic}\xspace}
+\newcommand{\HighsBasisStatusUpper}{\code{HighsBasisStatus::kUpper}\xspace}
+\newcommand{\HighsBasisStatusZero}{\code{HighsBasisStatus::kZero}\xspace}
+\newcommand{\HighsBasisStatusNonbasic}{\code{HighsBasisStatus::kNonbasic}\xspace}
+
+% HighsInfo
+\newcommand{\HighsInfo}{\code{HighsInfo}\xspace}
+\newcommand{\HighsInfoValid}{\code{valid}\xspace}
+\newcommand{\HighsInfoMipNodeCount}{\code{mip\_node\_count}\xspace}
+\newcommand{\HighsInfoSimplexIterationCount}{\code{simplex\_iteration\_count}\xspace}
+\newcommand{\HighsInfoIpmIterationCount}{\code{ipm\_iteration\_count}\xspace}
+\newcommand{\HighsInfoCrossoverIterationCount}{\code{crossover\_iteration\_count}\xspace}
+\newcommand{\HighsInfoQpIterationCount}{\code{qp\_iteration\_count}\xspace}
+\newcommand{\HighsInfoPrimalSolutionStatus}{\code{primal\_solution\_status}\xspace}
+\newcommand{\HighsInfoDualSolutionStatus}{\code{dual\_solution\_status}\xspace}
+\newcommand{\HighsInfoObjectiveFunctionValue}{\code{objective\_function\_value}\xspace}
+\newcommand{\HighsInfoMipDualBound}{\code{mip\_dual\_bound}\xspace}
+\newcommand{\HighsInfoMipGap}{\code{mip\_gap}\xspace}
+\newcommand{\HighsInfoNumPrimalInfeasibilities}{\code{num\_primal\_infeasibilities}\xspace}
+\newcommand{\HighsInfoMaxPrimalInfeasibility}{\code{max\_primal\_infeasibility}\xspace}
+\newcommand{\HighsInfoSumPrimalInfeasibilities}{\code{sum\_primal\_infeasibilities}\xspace}
+\newcommand{\HighsInfoNumDualInfeasibilities}{\code{num\_dual\_infeasibilities}\xspace}
+\newcommand{\HighsInfoMaxDualInfeasibility}{\code{max\_dual\_infeasibility}\xspace}
+\newcommand{\HighsInfoSumDualInfeasibilities}{\code{sum\_dual\_infeasibilities}\xspace}
+
+% HighsOptions
+\newcommand{\HighsOptions}{\code{HighsOptions}\xspace}
 \newcommand{\InfiniteCost}{\code{infinite\_cost}\xspace}
 \newcommand{\InfiniteBound}{\code{infinite\_bound}\xspace}
 \newcommand{\SmallMatrixValue}{\code{small\_matrix\_value}\xspace}
@@ -128,6 +181,13 @@
 \newcommand{\MipFeasibilityTolerance}{\code{mip\_feasibility\_tolerance}\xspace}
 \newcommand{\MipEpsilon}{\code{mip\_epsilon}\xspace}
 \newcommand{\MipHeuristicEffort}{\code{mip\_heuristic\_effort}\xspace}
+
+%Highs class methods
+\newcommand{\HighsRun}{\code{Highs::run()}\xspace}
+
+%Highs C API methods
+\newcommand{\CHighsRun}{\code{highs_run(void* highs)}\xspace}
+
 
 \def\bfb{\mbox{\boldmath$b$}}
 \def\bfc{\mbox{\boldmath$c$}}
