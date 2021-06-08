@@ -60,7 +60,7 @@ document.
   \code{primal\_solution\_status} and
   \code{dual\_solution\_status}. These are interpreted using
   the values in Table~\ref{tab:HighsSolutionStatus}.
-  \begin{table}[h]
+  \begin{table}[ht]
     \centerline{
       \begin{tabular}{|l|l|p{8cm}|}\hline
         Value & \Cpp constant & Interpretation\\\hline
@@ -80,6 +80,27 @@ document.
 
 \section{Long integers}
 \input HighsInt
+
+\section{Return status}
+
+Since the names of constants in \HiGHS now conform to the Google \Cpp
+style guide~\cite{GoogleStyleGuide}, numerous constants that have
+changed name. Those used in the \Cpp interface are listed in
+Section~\ref{sect:ChangedConstants}. However, the return status
+\EnumClass \HighsStatus has changed both the names of its values and
+their cast to integer. The latter affects the \C interface, and was
+done so that the integer values are consistent with \C
+conventions. The new names and the corresponding integer value are
+listed in Table~\ref{tab:HighsStatusEnumClass}.
+
+\input TableHighsStatusEnumClass
+
+In the \Cpp interface, the
+
+This means that, in the \C
+interface, the corresponding methods return the integer cast of the
+\HighsStatus value: 0 implies success, 1 implies a warning, and 2
+implies an error. 
 
 \section{Model handling}
 Now that \HiGHS can solve MIPs and QPs, as well as LPs, model handling
@@ -147,7 +168,7 @@ Table~\ref{tab:HighsModelStatus}.
 
 \begin{sidewaystable}
 \centerline{
-  \begin{tabular}{|p{8cm}|l|l|l|l|}\hline
+  \begin{tabular}{|p{8cm}|r|l|r|l|}\hline
 &\multicolumn2{c|}{Currently}&\multicolumn2{c|}{Formerly}\\\cline{2-5}
     Description&Integer&\HighsModelStatus&Integer&\HighsModelStatus\\\hline
 Not set&0&\code{kNotset}&0&\code{NOTSET}\\
@@ -194,7 +215,7 @@ log output goes to both the console and to the file
 \file{Highs.log}. The production of log output and name of the logging
 file is controlled by the \code{HighsOptions} settings in
 Table~\ref{tab:HighsLogging}.
-\begin{table}
+\begin{table}[ht]
 \centerline{
   \begin{tabular}{|l|l|l|p{10cm}|}\hline
     Option name & Type & Default & Description\\\hline
@@ -223,13 +244,13 @@ executable, and are set in the options file. In an application, they
 are redundant since their function is duplicated by parameters to
 methods that write the solution to a file.
 
-\section{Changed constants}
+\section{Changed constants}~\label{sect:ChangedConstants}
 Since the names of constants in \HiGHS now conform to the Google \Cpp
 style guide~\cite{GoogleStyleGuide}, numerous constants that may be
-used in \Cpp applications have changed name. Their values (when cast
-to integer if necessary) have not changed. The current and former
-names, together with integer values and short description are given in
-Table~\ref{tab:ChangedConstants}.
+used in \Cpp applications have changed name. With the exception of
+\HighsStatus (see above), their values (when cast to integer) have not
+changed. The current and former names, together with integer values
+and short description are given in Table~\ref{tab:ChangedConstants}.
 
 \begin{sidewaystable}
 \centerline{
@@ -246,12 +267,85 @@ Table~\ref{tab:ChangedConstants}.
 \caption{Changed Constants}\label{tab:ChangedConstants}
 \end{sidewaystable}
 
-\section{Deleted and deprecated methods}
+\section{Changed, deleted and deprecated methods}
 
 To allow progress and keep the \HiGHS software engineering demands
-within the resources available, a small number of methods have been
-deleted, and a rather larger number are deprecated. These can be
-expected to be deleted in future versions of \HiGHS.
+within the resources available, some methods have been changed, a
+small number have been deleted, and a rather larger number are
+deprecated. These can be expected to be deleted in future versions of
+\HiGHS.
+
+\subsection{Changed methods}
+
+For historical reasons, the methods in the \Cpp interface listed in
+Table~\ref{tab:ChangedMethods} returned \Bool rather than
+\HighsStatus, with \true indicating success. When cast to integer in
+the \C interface, 0 implied an error, and 1 success: the opposite of
+the \C convention! For consistency and clarity, they now all return
+\HighsStatus.
+
+\begin{table}[ht]
+\centerline{
+  \begin{tabular}{|l|p{8cm}|}\hline
+\Cpp \HiGHS class & \C interface equivalent(s)\\\hline
+\HighsAddRow & \CHighsAddRow\\\hline
+\HighsAddRows & \CHighsAddRows\\\hline
+\HighsAddCol & \CHighsAddCol\\\hline
+\HighsAddCols & \CHighsAddCols\\\hline
+\HighsChangeObjectiveSense & \CHighsChangeObjectiveSense\\\hline
+\HighsChangeColIntegrality & \CHighsChangeColIntegrality
+\\\hline
+\HighsChangeColsIntegrality & 
+\CHighsChangeColsIntegralityByRange
+\CHighsChangeColsIntegralityBySet
+\CHighsChangeColsIntegralityByMask
+\\\hline
+\HighsChangeColCost & \CHighsChangeColCost\\\hline
+\HighsChangeColsCost & 
+\CHighsChangeColsCostByRange
+\CHighsChangeColsCostBySet
+\CHighsChangeColsCostByMask
+\\\hline
+\HighsChangeColBounds & \CHighsChangeColBounds\\\hline
+\HighsChangeColsBounds & 
+\CHighsChangeColsBoundsByRange
+\CHighsChangeColsBoundsBySet
+\CHighsChangeColsBoundsByMask
+\\\hline
+\HighsChangeRowBounds & \CHighsChangeRowBounds\\\hline
+\HighsChangeRowsBounds & 
+\CHighsChangeRowsBoundsByRange
+\CHighsChangeRowsBoundsBySet
+\CHighsChangeRowsBoundsByMask
+\\\hline
+\HighsChangeCoeff & \CHighsChangeCoeff\\\hline
+\HighsGetObjectiveSense & \CHighsGetObjectiveSense\\\hline
+\HighsGetCols & 
+\CHighsGetColsByRange
+\CHighsGetColsBySet
+\CHighsGetColsByMask
+\\\hline
+\HighsGetRows & 
+\CHighsGetRowsByRange
+\CHighsGetRowsBySet
+\CHighsGetRowsByMask
+\\\hline
+\HighsGetCoeff & \CHighsGetCoeff\\\hline
+\HighsDeleteCols & 
+\CHighsDeleteColsByRange
+\CHighsDeleteColsBySet
+\CHighsDeleteColsByMask
+\\\hline
+\HighsDeleteRows & 
+\CHighsDeleteRowsByRange
+\CHighsDeleteRowsBySet
+\CHighsDeleteRowsByMask
+\\\hline
+\HighsScaleCol & \CHighsScaleCol\\\hline
+\HighsScaleRow & \CHighsScaleRow\\\hline
+    \end{tabular}}
+\caption{Methods now returning \HighsStatus in \Cpp, and cast of \HighsStatus in \C}\label{tab:ChangedMethods}
+\end{table}
 
 \subsection{Deleted methods}
 
@@ -325,7 +419,7 @@ Deprecated methods in the \C interface are listed in Table~\ref{tab:DeprecatedMe
 \caption{Deprecated methods}\label{tab:DeprecatedMethodsCpp}
 \end{sidewaystable}
 
-\begin{table}
+\begin{table}[ht]
 \centerline{
   \begin{tabular}{|p{5cm}|p{9cm}|}\hline
 Deprecated&Replacement\\\hline
