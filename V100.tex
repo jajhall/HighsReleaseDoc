@@ -386,7 +386,7 @@ class members are used.
 \begin{table}[ht]
 \leftline{
   \begin{tabular}{p{15cm}}
-    \HighsPassModelModelDef \\
+    \HighsPassModelModelDef \\\nam
     \HighsPassModelLpDef 
   \end{tabular}}
 \caption{Passing a \HighsModel{} or \HighsLp{} to \HiGHS in \Cpp}\label{tab:HighsPassModel}
@@ -547,56 +547,83 @@ interface.
 
 \subsection{Methods}
 
-\subsubsection{Solving the model}
+\subsubsection{Solving the model}\label{sect:SolvingTheModel}
 
-The incumbent model is solved by calling the \Cpp method \HighsRun{} or,
-in the \C interface, its equivalent method. Both are defined in
-Table~\ref{tab:HighsRun}. By default, \HiGHS will use what it
+The incumbent model is solved by calling the \Cpp method
+\begin{tabbing}
+  \HighsRunDef{}
+\end{tabbing}
+or, in the \C interface, 
+\begin{tabbing}
+  \CHighsRunDef{}
+\end{tabbing}
+By default, \HiGHS will use what it
 considers to be the best solver of the appropriate type for the
 incumbent model, and the best run-time option settings. To force
 \HiGHS to solve with a particular solver and run-time options,
 \HighsOptions{} values defined in Section~\ref{sect:Options} may be modified.
 
-\begin{table}[ht]
-\leftline{
-  \begin{tabular}{|l|p{8cm}|}\hline
-\Cpp \HiGHS class & \C interface equivalent\\\hline
-\HighsRunDef& \CHighsRunDef\\\hline
-  \end{tabular}}
-\caption{Solving the incumbent model via the \Cpp and \C interface}\label{tab:HighsRun}
-\end{table}
-
 \subsubsection{Extracting the solution data}
 
 After ``solving'' the model it is essential to inspect the model
 status, since the model may have been found to be infeasible or
-unbounded.
+unbounded. 
 
 \begin{table}[ht]
 \leftline{
   \begin{tabular}{l}
-\HighsGetModelStatusDef\\
-\HighsGetInfoDef\\
-\HighsGetSolutionDef\\
-\HighsGetBasisDef\\
+\HighsGetModelStatusDef\\\nam
+\HighsGetInfoDef\\\nam
+\HighsGetSolutionDef\\\nam
+\HighsGetBasisDef\\\nam
   \end{tabular}}
 \caption{Extracting the solution data via the \Cpp interface}\label{tab:SolutionDataCpp}
 \end{table}
 
 \begin{table}[ht]
 \leftline{
+  \setlength\tabcolsep{0pt}
   \begin{tabular}{lp{13cm}}
     \HighsInt{} \code{Highs\_getModelStatus(}&\VoidStarHighsInstance\code{);}
   \end{tabular}}
+\codelinespace
 
 \leftline{
+  \setlength\tabcolsep{0pt}
   \begin{tabular}{lp{13cm}}
     \HighsInt{} \code{Highs\_getScaledModelStatus(}&\VoidStarHighsInstance\code{);}
   \end{tabular}}
+\codelinespace
 
 \leftline{
+  \setlength\tabcolsep{0pt}
   \begin{tabular}{lp{13cm}}
-    \HighsInt{} \code{Highs\_getIntInfoValue(}&\VoidStarHighsInstance\codeComma\Const{} \CharStar \HighsInfoName\codeComma \HighsIntStar{} \HighsInfoValue{} \code{);}\\
+    \HighsInt{} \code{Highs\_getIntInfoValue(}&\VoidStarHighsInstance\codeComma\Const{} \CharStar{} \HighsInfoName\codeComma \HighsIntStar{} \HighsInfoValue\code{);}\\
+  \end{tabular}}
+\codelinespace
+
+\leftline{
+  \setlength\tabcolsep{0pt}
+  \begin{tabular}{lp{13cm}}
+    \HighsInt{} \code{Highs\_getDoubleInfoValue(}&\VoidStarHighsInstance\codeComma\Const{} \CharStar{} \HighsInfoName\codeComma \DoubleStar{} \HighsInfoValue\code{);}\\
+  \end{tabular}}
+\codelinespace
+
+\leftline{
+  \setlength\tabcolsep{0pt}
+  \begin{tabular}{lp{13cm}}
+    \HighsInt{} \code{Highs\_getSolution(}&\VoidStarHighsInstance\codeComma\\
+    &\DoubleStar{} \HighsSolutionColValue\codeComma\DoubleStar{} \HighsSolutionColDual\codeComma\\
+    &\DoubleStar{} \HighsSolutionRowValue\codeComma\DoubleStar{} \HighsSolutionRowDual\code{);}\\
+  \end{tabular}}
+\codelinespace
+
+\leftline{
+  \setlength\tabcolsep{0pt}
+  \begin{tabular}{lp{13cm}}
+    \HighsInt{} \code{Highs\_getBasis(}&\VoidStarHighsInstance\codeComma
+    \HighsIntStar{} \HighsBasisColStatus\codeComma
+    \HighsIntStar{} \HighsBasisRowStatus\code{);}\\
   \end{tabular}}
 \caption{Extracting the solution data via the \C interface}\label{tab:SolutionDataC}
 \end{table}
@@ -620,70 +647,70 @@ unbounded.
 \section{Options}\label{sect:Options}
 
 \begin{itemize}
-\item \Double \InfiniteCost
-\item \Double \InfiniteBound
-\item \Double \SmallMatrixValue
-\item \Double \LargeMatrixValue
-\item \Double \PrimalFeasibilityTolerance
-\item \Double \DualFeasibilityTolerance
-\item \Double \IpmOptimalityTolerance
-\item \Double \ObjectiveBound
-\item \Double \ObjectiveTarget
-\item \HighsInt \HighsRandomSeed
-\item \HighsInt \HighsDebugLevel
-\item \HighsInt \HighsAnalysisLevel
-\item \HighsInt \SimplexStrategy
-\item \HighsInt \SimplexScaleStrategy
-\item \HighsInt \SimplexCrashStrategy
-\item \HighsInt \SimplexDualEdgeWeightStrategy
-\item \HighsInt \SimplexPrimalEdgeWeightStrategy
-\item \HighsInt \SimplexIterationLimit
-\item \HighsInt \SimplexUpdateLimit
-\item \HighsInt \IpmIterationLimit
-\item \HighsInt \HighsMinThreads
-\item \HighsInt \HighsMaxThreads
-\item \String \SolutionFile
-\item \String \LogFile
-\item \Bool \WriteSolutionToFile
-\item \Bool \WriteSolutionPretty
-\item \Bool \OutputFlag
-\item \Bool \LogToConsole
-\item \HighsInt \LogDevLevel
-\item \Bool \RunCrossover
-\item \Bool \AllowUnboundedOrInfeasible
-\item \Bool \UseImpliedBoundsFromPresolve
-\item \Bool \MpsParserTypeFree
-\item \HighsInt \KeepNRows
-\item \HighsInt \AllowedSimplexMatrixScaleFactor
-\item \HighsInt \AllowedSimplexCostScaleFactor
-\item \HighsInt \SimplexDualiseStrategy
-\item \HighsInt \SimplexPermuteStrategy
-\item \Bool \DualSimplexCleanup
-\item \HighsInt \SimplexPriceStrategy
-\item \HighsInt \PresolveSubstitutionMaxfillin
-\item \Bool \SimplexInitialConditionCheck
-\item \Double \SimplexInitialConditionTolerance
-\item \Double \DualSteepestEdgeWeightLogErrorThreshold
-\item \Double \DualSimplexCostPerturbationMultiplier
-\item \Double \PrimalSimplexBoundPerturbationMultiplier
-\item \Double \PresolvePivotThreshold
-\item \Double \FactorPivotThreshold
-\item \Double \FactorPivotTolerance
-\item \Double \StartCrossoverTolerance
-\item \Bool \LessInfeasibleDseCheck
-\item \Bool \LessInfeasibleDseChooseRow
-\item \Bool \UseOriginalHfactorLogic
-\item \HighsInt \MipMaxNodes
-\item \HighsInt \MipMaxStallNodes
-\item \HighsInt \MipMaxLeaves
-\item \HighsInt \MipLpAgeLimit
-\item \HighsInt \MipPoolAgeLimit
-\item \HighsInt \MipPoolSoftLimit
-\item \HighsInt \MipPscostMinreliable
-\item \HighsInt \MipReportLevel
-\item \Double \MipFeasibilityTolerance
-\item \Double \MipEpsilon
-\item \Double \MipHeuristicEffort
+\item \Double{} \InfiniteCost
+\item \Double{} \InfiniteBound
+\item \Double{} \SmallMatrixValue
+\item \Double{} \LargeMatrixValue
+\item \Double{} \PrimalFeasibilityTolerance
+\item \Double{} \DualFeasibilityTolerance
+\item \Double{} \IpmOptimalityTolerance
+\item \Double{} \ObjectiveBound
+\item \Double{} \ObjectiveTarget
+\item \HighsInt{} \HighsRandomSeed
+\item \HighsInt{} \HighsDebugLevel
+\item \HighsInt{} \HighsAnalysisLevel
+\item \HighsInt{} \SimplexStrategy
+\item \HighsInt{} \SimplexScaleStrategy
+\item \HighsInt{} \SimplexCrashStrategy
+\item \HighsInt{} \SimplexDualEdgeWeightStrategy
+\item \HighsInt{} \SimplexPrimalEdgeWeightStrategy
+\item \HighsInt{} \SimplexIterationLimit
+\item \HighsInt{} \SimplexUpdateLimit
+\item \HighsInt{} \IpmIterationLimit
+\item \HighsInt{} \HighsMinThreads
+\item \HighsInt{} \HighsMaxThreads
+\item \String{} \SolutionFile
+\item \String{} \LogFile
+\item \Bool{} \WriteSolutionToFile
+\item \Bool{} \WriteSolutionPretty
+\item \Bool{} \OutputFlag
+\item \Bool{} \LogToConsole
+\item \HighsInt{} \LogDevLevel
+\item \Bool{} \RunCrossover
+\item \Bool{} \AllowUnboundedOrInfeasible
+\item \Bool{} \UseImpliedBoundsFromPresolve
+\item \Bool{} \MpsParserTypeFree
+\item \HighsInt{} \KeepNRows
+\item \HighsInt{} \AllowedSimplexMatrixScaleFactor
+\item \HighsInt{} \AllowedSimplexCostScaleFactor
+\item \HighsInt{} \SimplexDualiseStrategy
+\item \HighsInt{} \SimplexPermuteStrategy
+\item \Bool{} \DualSimplexCleanup
+\item \HighsInt{} \SimplexPriceStrategy
+\item \HighsInt{} \PresolveSubstitutionMaxfillin
+\item \Bool{} \SimplexInitialConditionCheck
+\item \Double{} \SimplexInitialConditionTolerance
+\item \Double{} \DualSteepestEdgeWeightLogErrorThreshold
+\item \Double{} \DualSimplexCostPerturbationMultiplier
+\item \Double{} \PrimalSimplexBoundPerturbationMultiplier
+\item \Double{} \PresolvePivotThreshold
+\item \Double{} \FactorPivotThreshold
+\item \Double{} \FactorPivotTolerance
+\item \Double{} \StartCrossoverTolerance
+\item \Bool{} \LessInfeasibleDseCheck
+\item \Bool{} \LessInfeasibleDseChooseRow
+\item \Bool{} \UseOriginalHfactorLogic
+\item \HighsInt{} \MipMaxNodes
+\item \HighsInt{} \MipMaxStallNodes
+\item \HighsInt{} \MipMaxLeaves
+\item \HighsInt{} \MipLpAgeLimit
+\item \HighsInt{} \MipPoolAgeLimit
+\item \HighsInt{} \MipPoolSoftLimit
+\item \HighsInt{} \MipPscostMinreliable
+\item \HighsInt{} \MipReportLevel
+\item \Double{} \MipFeasibilityTolerance
+\item \Double{} \MipEpsilon
+\item \Double{} \MipHeuristicEffort
 \end{itemize}
 
 \bibliographystyle{abbrv}
@@ -691,4 +718,3 @@ unbounded.
 
 
 \end{document}
-
