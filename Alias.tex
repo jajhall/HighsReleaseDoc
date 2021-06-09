@@ -22,6 +22,7 @@
 \newcommand{\EnumClass}{\code{enum class}\xspace}
 
 \newcommand{\Const}{\code{const}\xspace}
+\newcommand{\codeComma}{\code{,}\xspace}
 
 \newcommand{\Void}{\code{void}\xspace}
 \newcommand{\VoidStar}{\code{void*}\xspace}
@@ -30,7 +31,10 @@
 \newcommand{\LongInt}{\code{int64\_t}\xspace}
 \newcommand{\Double}{\code{double}\xspace}
 \newcommand{\DoubleStar}{\code{double*}\xspace}
+\newcommand{\Char}{\code{char}\xspace}
+\newcommand{\CharStar}{\code{char*}\xspace}
 \newcommand{\Bool}{\code{bool}\xspace}
+\newcommand{\BoolStar}{\code{bool*}\xspace}
 \newcommand{\String}{\code{std::string}\xspace}
 \newcommand{\VectorDouble}{\code{std::vector<double>}\xspace}
 \newcommand{\VectorHighsInt}{\code{std::vector<integer>}\xspace}
@@ -71,6 +75,7 @@
 
 % HighsModelStatus
 \newcommand{\HighsModelStatus}{\code{HighsModelStatus}\xspace}
+\newcommand{\HighsModelStatusReference}{\code{HighsModelStatus\&}\xspace}
 
 % HighsModel
 \newcommand{\HighsModel}{\code{HighsModel}\xspace}
@@ -110,6 +115,7 @@
 
 % HighsSolution
 \newcommand{\HighsSolution}{\code{HighsSolution}\xspace}
+\newcommand{\HighsSolutionReference}{\code{HighsSolution\&}\xspace}
 \newcommand{\HighsSolutionColValue}{\code{col\_value}\xspace}
 \newcommand{\HighsSolutionRowValue}{\code{row\_value}\xspace}
 \newcommand{\HighsSolutionColDual}{\code{col\_dual}\xspace}
@@ -117,6 +123,7 @@
 
 % HighsBasis
 \newcommand{\HighsBasis}{\code{HighsBasis}\xspace}
+\newcommand{\HighsBasisReference}{\code{HighsBasis\&}\xspace}
 \newcommand{\HighsBasisValid}{\code{valid}\xspace}
 \newcommand{\HighsBasisColStatus}{\code{col\_status}\xspace}
 \newcommand{\HighsBasisRowStatus}{\code{row\_status}\xspace}
@@ -129,6 +136,9 @@
 
 % HighsInfo
 \newcommand{\HighsInfo}{\code{HighsInfo}\xspace}
+\newcommand{\HighsInfoReference}{\code{HighsInfo\&}\xspace}
+\newcommand{\HighsInfoName}{\code{name}}
+\newcommand{\HighsInfoValue}{\code{value}}
 \newcommand{\HighsInfoValid}{\code{valid}\xspace}
 \newcommand{\HighsInfoMipNodeCount}{\code{mip\_node\_count}\xspace}
 \newcommand{\HighsInfoSimplexIterationCount}{\code{simplex\_iteration\_count}\xspace}
@@ -221,7 +231,15 @@
 \newcommand{\HighsPassModelLpDef}{\code{HighsStatus passModel(HighsLp lp);}\xspace}
 
 \newcommand{\HighsRun}{\code{run()}\xspace}
-\newcommand{\HighsRunDef}{\code{HighsStatus \HighsRun;}\xspace}
+\newcommand{\HighsRunDef}{\code{\HighsStatus \HighsRun;}\xspace}
+\newcommand{\HighsGetModelStatus}{\code{getModelStatus}\xspace}
+\newcommand{\HighsGetModelStatusDef}{\code{\Const \HighsModelStatusReference getModelStatus(const bool scaled\_model = false) const;}\xspace}
+\newcommand{\HighsGetInfo}{\code{getInfo()}\xspace}
+\newcommand{\HighsGetInfoDef}{\code{\Const \HighsInfoReference \HighsGetInfo\Const;}\xspace}
+\newcommand{\HighsGetSolution}{\code{getSolution()}\xspace}
+\newcommand{\HighsGetSolutionDef}{\code{\Const \HighsSolutionReference \HighsGetSolution\Const;}\xspace}
+\newcommand{\HighsGetBasis}{\code{getBasis()}\xspace}
+\newcommand{\HighsGetBasisDef}{\code{\Const \HighsBasisReference \HighsGetBasis\Const;}\xspace}
 
 \newcommand{\HighsAddRow}{\code{addRow}\xspace}
 \newcommand{\HighsAddRows}{\code{addRows}\xspace}
@@ -247,12 +265,16 @@
 \newcommand{\HighsScaleRow}{\code{scaleRow}\xspace}
 
 %Highs C API methods
-\newcommand{\CHighsRun}{\code{highs\_run(void* highs)}\xspace}
-\newcommand{\CHighsRunDef}{\HighsInt \CHighsRun;\xspace}
 \newcommand{\CHighsCreate}{\code{Highs\_create(void)}\xspace}
 \newcommand{\CHighsCreateDef}{\VoidStar \CHighsCreate;\xspace}
 \newcommand{\CHighsDestroy}{\code{Highs\_destroy(void* highs)}\xspace}
 \newcommand{\CHighsDestroyDef}{\Void \CHighsDestroy;\xspace}
+
+\newcommand{\CHighsRun}{\code{Highs\_run(void* highs)}\xspace}
+\newcommand{\CHighsRunDef}{\HighsInt \CHighsRun;\xspace}
+
+\newcommand{\CHighsGetModelStatus}{\code{Highs\_getModelStatus(void* highs)}\xspace}
+\newcommand{\CHighsGetScaledModelStatus}{\code{Highs\_getScaledModelStatus(void* highs)}\xspace}
 
 \newcommand{\CHighsAddRow}{\code{Highs\_addRow}\xspace}
 \newcommand{\CHighsAddRows}{\code{Highs\_addRows}\xspace}

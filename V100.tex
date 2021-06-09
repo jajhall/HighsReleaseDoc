@@ -547,6 +547,8 @@ via the \C interface.
 
 \subsection{Methods}
 
+\subsubsection{Solving the model}
+
 The incumbent model is solved by calling the \Cpp method \HighsRun or,
 in the \C interface, its equivalent method. Both are defined in
 Table~\ref{tab:HighsRun}. By default, \Highs will use what it
@@ -554,6 +556,7 @@ considers to be the best solver of the appropriate type for the
 incumbent model, and the best run-time option settings. To force
 \Highs to solve with a particular solver and run-time options,
 \HighsOptions values defined in Section~\ref{sect:Options} may be modified.
+
 \begin{table}[ht]
 \leftline{
   \begin{tabular}{|l|p{8cm}|}\hline
@@ -561,6 +564,39 @@ incumbent model, and the best run-time option settings. To force
 \HighsRunDef& \CHighsRunDef\\\hline
   \end{tabular}}
 \caption{Solving the incumbent model via the \Cpp and \C interface}\label{tab:HighsRun}
+\end{table}
+
+\subsubsection{Extracting the solution data}
+
+After ``solving'' the model it is essential to inspect the model status, since the model may have been found to be infeasible or unbounded. 
+
+\begin{table}[ht]
+\leftline{
+  \begin{tabular}{l}
+\HighsGetModelStatusDef\\
+\HighsGetInfoDef\\
+\HighsGetSolutionDef\\
+\HighsGetBasisDef\\
+  \end{tabular}}
+\caption{Extracting the solution data via the \Cpp interface}\label{tab:SolutionDataCpp}
+\end{table}
+
+\begin{table}[ht]
+\leftline{
+  \begin{tabular}{lp{13cm}}
+    \HighsInt \code{Highs\_getModelStatus(}&\VoidStar \HighsInstance\code{);}
+  \end{tabular}}
+
+\leftline{
+  \begin{tabular}{lp{13cm}}
+    \HighsInt \code{Highs\_getScaledModelStatus(}&\VoidStar \HighsInstance\code{);}
+  \end{tabular}}
+
+\leftline{
+  \begin{tabular}{lp{13cm}}
+    \HighsInt \code{Highs\_getIntInfoValue(}&\VoidStar \HighsInstance\codeComma\Const \CharStar \HighsInfoName\codeComma \HighsIntStar \HighsInfoValue \code{);}\\
+  \end{tabular}}
+\caption{Extracting the solution data via the \C interface}\label{tab:SolutionDataC}
 \end{table}
 
 \section{Model extraction}\label{sect:ModelExtraction}
