@@ -8,7 +8,7 @@
 \usepackage{colortbl}
 \usepackage{algpseudocode}
 \usepackage{algorithm} 
-\usepackage{mdframed} 
+\usepackage{underscore} 
 
 \input Alias
 
@@ -286,18 +286,18 @@ values.
 
 \subsubsection{Cost validation}\label{sect:CostValidation}
 
-In \Cpp, if the size of \ColCost is less than \NumCol then \HiGHS
-will return an error. Any entries found to be greater
-than the \HighsOptions value \InfiniteCost in absolute value will cause \HiGHS to return
-with \inred{a warning or an error}.
+In \Cpp, if the size of \ColCost{} is less than \NumCol{} then \HiGHS
+will return an error. Any entries found to be greater than the
+\HighsOptions{} value \InfiniteCost{} in absolute value will cause
+\HiGHS to return with \inred{a warning or an error}.
 
 
 \subsubsection{Bound validation}\label{sect:BoundValidation}
 
-In \Cpp, if the size of \ColLower or \ColUpper is less than \NumCol,
-or if the size of \RowLower or \RowUpper is less than \NumRow, then
+In \Cpp, if the size of \ColLower{} or \ColUpper{} is less than \NumCol,
+or if the size of \RowLower{} or \RowUpper{} is less than \NumRow, then
 \HiGHS will return an error. Any lower bound found to be greater than
-or equal to the \HighsOptions value \InfiniteBound, or any upper bound found to be less than
+or equal to the \HighsOptions{} value \InfiniteBound, or any upper bound found to be less than
 or equal to -\InfiniteBound, will cause \HiGHS to return with an error.
 
 Bounds that are inconsistent due to the lower bound exceeding the
@@ -305,9 +305,9 @@ upper bound are permitted in \HiGHS but, when found, a warning message
 will be issued. If \HiGHS is asked to solve a model with inconsistent
 bounds, it will identify it as being infeasible.
 
-Any lower bounds found to be less than or equal to -\InfiniteBound
+Any lower bounds found to be less than or equal to -\InfiniteBound{}
 will be ignored (treated as if they were negative infinity).  Any
-upper bounds found to be greater than or equal to \InfiniteBound will
+upper bounds found to be greater than or equal to \InfiniteBound{} will
 be ignored (treated as if they were positive infinity). \HiGHS will
 report the number of bounds ignored in this way.
 
@@ -324,10 +324,10 @@ entries. If the data fails to satisfy any of these conditions, \HiGHS
 will return an error.
 
 There are limits on the minimum and maximum absolute values in the
-constraint matrix that \HiGHS will use. These limits are \HighsOptions
-values \SmallMatrixValue and \LargeMatrixValue. Any entries below
-\SmallMatrixValue in absolute value are ignored (with a warning) but
-entries found to be greater than \LargeMatrixValue in absolute value
+constraint matrix that \HiGHS will use. These limits are \HighsOptions{}
+values \SmallMatrixValue{} and \LargeMatrixValue. Any entries below
+\SmallMatrixValue{} in absolute value are ignored (with a warning) but
+entries found to be greater than \LargeMatrixValue{} in absolute value
 will cause \HiGHS to return with an error.
 
 \subsubsection{Hessian matrix validation}\label{sect:HessianMatrixValidation}
@@ -389,7 +389,7 @@ class members are used.
     \HighsPassModelModelDef \\
     \HighsPassModelLpDef 
   \end{tabular}}
-\caption{Passing a \HighsModel{} or \HighsLp{} to \Highs in \Cpp}\label{tab:HighsPassModel}
+\caption{Passing a \HighsModel{} or \HighsLp{} to \HiGHS in \Cpp}\label{tab:HighsPassModel}
 \end{table}
 
 \input TableCHighsPassModel
@@ -433,10 +433,10 @@ Integer&\HighsModelStatus&Description\\\hline
 
 \subsection{Scalar information}
 Scalar information about the solution of the model is held by \HiGHS
-in an instance of the \HighsInfo class. The members of this class are
-listed in Table~\ref{tab:HighsInfo}. The truth of \HighsInfoValid
+in an instance of the \HighsInfo{} class. The members of this class are
+listed in Table~\ref{tab:HighsInfo}. The truth of \HighsInfoValid{}
 indicates whether the values of the remaining members are valid. In
-the \Cpp interface, a \Const{} reference to this instance of the \HighsInfo
+the \Cpp interface, a \Const{} reference to this instance of the \HighsInfo{}
 class is available. Values of individual members can also be obtained,
 and this is how they are in the \C interface.
 
@@ -473,7 +473,7 @@ Type&Name&Description\\\hline
 \Double & \HighsInfoMaxDualInfeasibility &Maximum dual infeasibility\\
 \Double & \HighsInfoSumDualInfeasibilities &Sum of dual infeasibilities\\\hline
   \end{tabular}}
-\caption{Members of the \HighsInfo class}\label{tab:HighsInfo}
+\caption{Members of the \HighsInfo{} class}\label{tab:HighsInfo}
 \end{table}
 
 \subsection{Solution values}
@@ -490,7 +490,7 @@ The solution data that are available from \HiGHS depends on the value
 of the model status, when it was identified, and how. To identify what
 solution data are available, and whether the solution values are
 feasible or not, consult the values of \HighsInfoPrimalSolutionStatus{}
-and \HighsInfoDualSolutionStatus{} via \HighsInfo (Table~\ref{tab:HighsInfo}).
+and \HighsInfoDualSolutionStatus{} via \HighsInfo{} (Table~\ref{tab:HighsInfo}).
 
 \begin{table}[ht]
 \leftline{
@@ -506,14 +506,14 @@ Type&Name&Description\\\hline
 
 \subsection{The variable and constraint status}
 The status of each variable and constraint is held by \HiGHS in an
-instance of the \HighsBasis structure. In the case of LP problems,
+instance of the \HighsBasis{} structure. In the case of LP problems,
 this is the {\em basis}. Its main components are listed in
 Table~\ref{tab:HighsBasis}.
 
 The variable and constraint status data that are available from \HiGHS
 depends on the value of the model status, when it was identified, and
 how. To identify what variable and constraint status data are
-available, consult the value of \HighsInfoBasisStatus via \HighsInfo
+available, consult the value of \HighsInfoBasisStatus{} via \HighsInfo{}
 (Table~\ref{tab:HighsInfo}).
 
 \begin{table}[ht]
@@ -525,12 +525,12 @@ Type&Name&Description\\\hline
   \end{tabular}}
 \caption{Members of the \HighsBasis structure}\label{tab:HighsBasis}
 \end{table}
-The \HighsBasisStatus type is an \EnumClass, with members
-listed in Table~\ref{tab:HighsBasisStatusEnumClass}, where the integer
-value given is the cast used in the \C interface.
-In the \Cpp interface, a \Const{} reference to this instance of the
-\HighsBasis structure is available, and a copy of the same data can be obtained
-via the \C interface.
+The \HighsBasisStatus{} type is an \EnumClass, with members listed in
+Table~\ref{tab:HighsBasisStatusEnumClass}, where the integer value
+given is the cast used in the \C interface.  In the \Cpp interface, a
+\Const{} reference to this instance of the \HighsBasis{} structure is
+available, and a copy of the same data can be obtained via the \C
+interface.
 
 \begin{table}[ht]
   \leftline{
@@ -549,13 +549,13 @@ via the \C interface.
 
 \subsubsection{Solving the model}
 
-The incumbent model is solved by calling the \Cpp method \HighsRun or,
+The incumbent model is solved by calling the \Cpp method \HighsRun{} or,
 in the \C interface, its equivalent method. Both are defined in
-Table~\ref{tab:HighsRun}. By default, \Highs will use what it
+Table~\ref{tab:HighsRun}. By default, \HiGHS will use what it
 considers to be the best solver of the appropriate type for the
 incumbent model, and the best run-time option settings. To force
-\Highs to solve with a particular solver and run-time options,
-\HighsOptions values defined in Section~\ref{sect:Options} may be modified.
+\HiGHS to solve with a particular solver and run-time options,
+\HighsOptions{} values defined in Section~\ref{sect:Options} may be modified.
 
 \begin{table}[ht]
 \leftline{
@@ -568,7 +568,9 @@ incumbent model, and the best run-time option settings. To force
 
 \subsubsection{Extracting the solution data}
 
-After ``solving'' the model it is essential to inspect the model status, since the model may have been found to be infeasible or unbounded. 
+After ``solving'' the model it is essential to inspect the model
+status, since the model may have been found to be infeasible or
+unbounded.
 
 \begin{table}[ht]
 \leftline{
