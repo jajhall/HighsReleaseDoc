@@ -47,12 +47,13 @@
 \newcommand{\EnumClass}{\code{enum class}}
 
 \newcommand{\Const}{\code{const}}
-\newcommand{\codeComma}{\code{,}}
+\newcommand{\codeComma}{\code{,}\xspace}
 
 \newcommand{\Void}{\code{void}}
 \newcommand{\VoidStar}{\code{void*}}
 \newcommand{\HighsInt}{\code{integer}}
 \newcommand{\HighsIntStar}{\code{integer*}}
+\newcommand{\StandardInt}{\code{int}}
 \newcommand{\LongInt}{\code{int64\_t}}
 \newcommand{\Double}{\code{double}}
 \newcommand{\DoubleStar}{\code{double*}}
@@ -75,6 +76,7 @@
 %Classes, structs and enums
 \newcommand{\Highs}{\code{Highs}}
 \newcommand{\HighsInstance}{\code{highs}}
+\newcommand{\VoidStarHighsInstance}{\code{void* highs}}
 
 % HighsStatus
 \newcommand{\HighsStatus}{\code{HighsStatus}}
@@ -257,13 +259,13 @@
 \newcommand{\HighsRun}{\code{run()}}
 \newcommand{\HighsRunDef}{\code{\HighsStatus{} \HighsRun;}}
 \newcommand{\HighsGetModelStatus}{\code{getModelStatus}}
-\newcommand{\HighsGetModelStatusDef}{\code{\Const \HighsModelStatusReference getModelStatus(const bool scaled\_model = false) const;}}
+\newcommand{\HighsGetModelStatusDef}{\code{\Const{} \HighsModelStatusReference{} getModelStatus(const bool scaled\_model = false) const;}}
 \newcommand{\HighsGetInfo}{\code{getInfo()}}
-\newcommand{\HighsGetInfoDef}{\code{\Const \HighsInfoReference \HighsGetInfo \Const;}}
+\newcommand{\HighsGetInfoDef}{\code{\Const{} \HighsInfoReference{} \HighsGetInfo{} \Const;}}
 \newcommand{\HighsGetSolution}{\code{getSolution()}}
-\newcommand{\HighsGetSolutionDef}{\code{\Const \HighsSolutionReference \HighsGetSolution \Const;}}
+\newcommand{\HighsGetSolutionDef}{\code{\Const{} \HighsSolutionReference{} \HighsGetSolution{} \Const;}}
 \newcommand{\HighsGetBasis}{\code{getBasis()}}
-\newcommand{\HighsGetBasisDef}{\code{\Const \HighsBasisReference \HighsGetBasis \Const;}}
+\newcommand{\HighsGetBasisDef}{\code{\Const{} \HighsBasisReference{} \HighsGetBasis{} \Const;}}
 
 \newcommand{\HighsAddRow}{\code{addRow}}
 \newcommand{\HighsAddRows}{\code{addRows}}
@@ -290,12 +292,12 @@
 
 %Highs C API methods
 \newcommand{\CHighsCreate}{\code{Highs\_create(void)}}
-\newcommand{\CHighsCreateDef}{\VoidStar \CHighsCreate;}
+\newcommand{\CHighsCreateDef}{\VoidStar{} \CHighsCreate;}
 \newcommand{\CHighsDestroy}{\code{Highs\_destroy(void* highs)}}
-\newcommand{\CHighsDestroyDef}{\Void \CHighsDestroy;}
+\newcommand{\CHighsDestroyDef}{\Void{} \CHighsDestroy;}
 
 \newcommand{\CHighsRun}{\code{Highs\_run(void* highs)}}
-\newcommand{\CHighsRunDef}{\HighsInt \CHighsRun;}
+\newcommand{\CHighsRunDef}{\HighsInt{} \CHighsRun;}
 
 \newcommand{\CHighsGetModelStatus}{\code{Highs\_getModelStatus(void* highs)}}
 \newcommand{\CHighsGetScaledModelStatus}{\code{Highs\_getScaledModelStatus(void* highs)}}

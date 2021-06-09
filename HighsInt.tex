@@ -2,9 +2,9 @@ By default, \HiGHS compiles with standard (32-bit) integers. However,
 to allow larger models to be handled (with the exception of the
 interior point method solver) it is now possible to compile \HiGHS so
 that it uses long (64-bit) integers in all cases. This is achieved by
-setting the \code{CMake} parameter \code{-DHIGHSINT64=on}. The type
-\code{HighsInt} is then set to be \code{int64\_t} rather than
-\code{int}. Long integers are not currently supported by the
-\code{FORTRAN} interface. Since \HiGHS can be compiled with either
+setting the \CMake parameter \code{-DHIGHSINT64=on}. The type
+\HighsInt{} is then set to be \LongInt{} rather than
+\StandardInt. Long integers are not currently supported by the
+\Fortran interface. Since \HiGHS can be compiled with either
 standard or long integers, integer values are referred to below
 anonymously as \HighsInt.

@@ -71,15 +71,15 @@ The parameters that control how \HiGHS runs are referred to option
 values. Their definition, default values and the means of modifying
 them are defined in Section~\ref{sect:Options}.
 
-\subsection{Creating a \Highs instance}
-In \Cpp, an instance of the \Highs class named (for example) \HighsInstance is created thus
+\subsection{Creating a \Highs{} instance}
+In \Cpp, an instance of the \Highs{} class named (for example) \HighsInstance{} is created thus
 \begin{tabbing}
-\ \ \Highs \HighsInstance;
+\ \ \Highs{} \HighsInstance;
 \end{tabbing}
 This requires the inclusion of the header file \HighsH. In \C, an
-instance of \Highs is created and destroyed using the methods defined
+instance of \Highs{} is created and destroyed using the methods defined
 in Table~\ref{tab:CHighsCreateDestroy}, so an instance named (for
-example) \HighsInstance is created and destroyed thus
+example) \HighsInstance{} is created and destroyed thus
 %
 \begin{tabbing}
 \ \ \code{void* highs = \CHighsCreate;}\\
@@ -94,7 +94,7 @@ For all other methods in the \C interface, the first argument is the void pointe
         \CHighsCreateDef \\
         \CHighsDestroyDef
     \end{tabular}}
-    \caption{Methods in the \C interface to create and destroy a \Highs instance}\label{tab:CHighsCreateDestroy}
+    \caption{Methods in the \C interface to create and destroy a \Highs{} instance}\label{tab:CHighsCreateDestroy}
 %\end{mdframed}
 \end{table}
 
@@ -105,7 +105,7 @@ For all other methods in the \C interface, the first argument is the void pointe
 Most methods in the \Cpp and \C interfaces return a status to indicate
 the success of the call. Those that do not are methods where model or
 solution information is returned (and success can be assumed). The
-type of the return status is \EnumClass \HighsStatus, with members
+type of the return status is \EnumClass{} \HighsStatus, with members
 listed in Table~\ref{tab:HighsStatusEnumClass}, where the integer
 value given is the cast used in the \C interface.
 
@@ -124,16 +124,16 @@ For the \Cpp interface and, to an increasing extent internally, \HiGHS
 now conforms to the Google \Cpp style guide~\cite{GoogleStyleGuide}.
 
 \section{Model definition}\label{sect:ModelDefinition}
-Models in \HiGHS are defined as an instance of the \HighsModel
-class. This consists of one instance of the \HighsLp class,
-and one instance of the \HighsHessian class. Communication of models
-to and from \HiGHS is possible via instances of the \HighsLp or
-\HighsModel class. In the \C and other interfaces, communication
+Models in \HiGHS are defined as an instance of the \HighsModel{}
+class. This consists of one instance of the \HighsLp{} class,
+and one instance of the \HighsHessian{} class. Communication of models
+to and from \HiGHS is possible via instances of the \HighsLp{} or
+\HighsModel{} class. In the \C and other interfaces, communication
 of models is via scalar values and addresses of arrays.
 
-\subsection{The \HighsLp class}\label{sect:HighsLp}
+\subsection{The \HighsLp{} class}\label{sect:HighsLp}
 
-The \HighsLp class allows LP and MIP problems of the form
+The \HighsLp{} class allows LP and MIP problems of the form
 $$
 \begin{array}{rl}
   \mathrm{minimize/maximize}&f+\bfc^T\bfx\\
@@ -169,10 +169,10 @@ Type&Name&Description\\\hline
 \VectorString&\RowName&The names of the rows\\
 \VectorHighsVarType&\Integrality&The set $\SetI$ of integrality restrictions on columns\\\hline
   \end{tabular}}
-\caption{\HighsLp class members}\label{tab:HighsLp}
+\caption{\HighsLp{} class members}\label{tab:HighsLp}
 \end{table}
 
-Three members of the \HighsLp class (\Orientation, \Sense and
+Three members of the \HighsLp{} class (\Orientation, \Sense{} and
 \Integrality) are of types particular to \HiGHS. They are all
 \EnumClass, with members listed in Table~\ref{tab:HighsLpEnumClass},
 where the integer value given is the cast used in the \C interface.
@@ -189,16 +189,16 @@ where the integer value given is the cast used in the \C interface.
       \HighsVarTypeContinuous&0&Variable can take continuous values\\
       \HighsVarTypeInteger&1&Variable must take integer values\\\hline
   \end{tabular}}
-  \caption{The \EnumClass type names for \HighsLp class members}\label{tab:HighsLpEnumClass}
+  \caption{The \EnumClass{} type names for \HighsLp{} class members}\label{tab:HighsLpEnumClass}
 \end{table}
  
 \subsubsection{Objective function}
 The sense of the objective (minimize or maximize) is defined by the
-value of the \Sense member of the \HighsLp class. This is of type
-\ObjSense, an \EnumClass whose names are given in
-Table~\ref{tab:HighsLpEnumClass}. When a \HighsLp instance is created,
-\Sense is set to \ObjSenseMinimize so, unless changed, the objective
-is minimized. In the \C interface, an \HighsInt parameter indicates
+value of the \Sense{} member of the \HighsLp{} class. This is of type
+\ObjSense, an \EnumClass{} whose names are given in
+Table~\ref{tab:HighsLpEnumClass}. When a \HighsLp{} instance is created,
+\Sense is set to \ObjSenseMinimize{} so, unless changed, the objective
+is minimized. In the \C interface, an \HighsInt{} parameter indicates
 whether the matrix is to be minimized or maximized according to the
 integer values in Table~\ref{tab:HighsLpEnumClass}.
 
@@ -209,53 +209,53 @@ Wikipedia~\cite{WikiSparseMatrix}. Since solvers generally access the
 constraint matrix column-wise, this was originally the only
 orientation permitted by \HiGHS. However, it is often preferable for
 modelling interfaces and users to specify the constraint matrix
-row-wise. The \Orientation member of the \HighsLp class is used to
+row-wise. The \Orientation{} member of the \HighsLp{} class is used to
 specify whether the matrix is held row-wise or column-wise. When a
-\HighsLp instance is created, the orientation is indicated as
+\HighsLp{} instance is created, the orientation is indicated as
 undefined by being set to \MatrixOrientationNone. If the orientation
-is not set to either \MatrixOrientationColwise or
+is not set to either \MatrixOrientationColwise{} or
 \MatrixOrientationRowwise, \HiGHS returns an error. In the \C
-interface, an \HighsInt parameter indicates whether the matrix is
+interface, an \HighsInt{} parameter indicates whether the matrix is
 row-wise or column-wise according to the integer values in
 Table~\ref{tab:HighsLpEnumClass}.
 
 If the constraint matrix $A$ is held column-wise (row-wise) then the
-size of \Astart must be at least \NumColPone (\NumRowPone), the
-zero'th entry of \Astart must be zero, and entry \NumCol (\NumRow) is
-the number of entries in the arrays \Aindex and \Avalue. Other
+size of \Astart{} must be at least \NumColPone{} (\NumRowPone), the
+zero'th entry of \Astart{} must be zero, and entry \NumCol{} (\NumRow) is
+the number of entries in the arrays \Aindex{} and \Avalue. Other
 requirements are discussed in
 Section~\ref{sect:ConstraintMatrixValidation}.
 
 \subsubsection{Names}
-When populating an instance of the \HighsLp class, no name data
+When populating an instance of the \HighsLp{} class, no name data
 needs to be supplied, and name data cannot be supplied via the \C
-interface. The \ModelName member of the \HighsLp class is the
+interface. The \ModelName{} member of the \HighsLp{} class is the
 name of the model, and is used occasionally in logging output. By
 default it is an empty string. If the model is read from a data file,
-then \ModelName is the name of the file (less its extension). The
-\ColName and \RowName members of the \HighsLp class are, by
+then \ModelName{} is the name of the file (less its extension). The
+\ColName{} and \RowName{} members of the \HighsLp{} class are, by
 default, of zero size. If the model is read from an MPS data file,
-then \ColName and \RowName contain its column and row names. If names
+then \ColName{} and \RowName{} contain its column and row names. If names
 are available they are printed when \HiGHS writes the model or
 solution.
 
 \subsubsection{Integrality}
-The \Integrality member of the \HighsLp class indicates which
+The \Integrality{} member of the \HighsLp{} class indicates which
 variables (if any) must take integer values. If this member is of zero
 size, or if all its entries are \HighsVarTypeContinuous, the set
 $\SetI$ is interpreted as being empty, so the instance is interpreted
-as being an LP. If entries of \Integrality are \HighsVarTypeInteger
+as being an LP. If entries of \Integrality{} are \HighsVarTypeInteger{}
 then, by default, the \HiGHS MIP solver will be used to find the
 optimal integer values of the corresponding variables. In the \C
-interface, an \HighsInt indicates whether a particular variable is
+interface, an \HighsInt{} indicates whether a particular variable is
 continuous or must take an integer value according to the integer
 values in Table~\ref{tab:HighsLpEnumClass}.
 
-\subsection{The \HighsHessian class}\label{sect:HighsHessian}
-The \HighsHessian class allows the \HighsModel class to represent the
+\subsection{The \HighsHessian{} class}\label{sect:HighsHessian}
+The \HighsHessian{} class allows the \HighsModel{} class to represent the
 Hessian matrix of the quadratic term in the objective function that
 distinguishes QP problems from LP problems. The representation of the
-Hessian matrix is column-wise, and the \HighsHessian class members are
+Hessian matrix is column-wise, and the \HighsHessian{} class members are
 defined in Table~\ref{tab:HighsHessian}.
 
 \begin{table}[ht]
@@ -267,10 +267,10 @@ Type&Name&Description\\\hline
 \VectorHighsInt&\Qindex&Indices of each column in the compressed sparse column storage\\
 \VectorDouble&\Qvalue&Values of each column in the compressed sparse column storage\\\hline
   \end{tabular}}
-\caption{\HighsHessian class members}\label{tab:HighsHessian}
+\caption{\HighsHessian{} class members}\label{tab:HighsHessian}
 \end{table}
 
-If a \HighsHessian instance has a positive value for \Qdim, and the
+If a \HighsHessian{} instance has a positive value for \Qdim, and the
 number of nonzeros in $Q$ is positive, then \Qdim must be equal to
 \NumCol. As with the column-wise constraint matrix, the size of
 \Qstart must be at least \QdimPone, the zero'th entry of \Qstart must
@@ -315,9 +315,9 @@ report the number of bounds ignored in this way.
 
 There is considerable scope for errors when defining a matrix in
 compressed vector form. Thus, \HiGHS validates any such data supplied
-to it. The zero'th entry of the \Astart array must be zero, and
+to it. The zero'th entry of the \Astart{} array must be zero, and
 entries must increase monotonically. This will not be strict if the
-matrix contains zero vectors. The \Aindex entries corresponding to a
+matrix contains zero vectors. The \Aindex{} entries corresponding to a
 particular vector must be non-negative, must not be greater than or
 equal to the (full) vector dimension, and there must be no duplicate
 entries. If the data fails to satisfy any of these conditions, \HiGHS
@@ -332,19 +332,19 @@ will cause \HiGHS to return with an error.
 
 \subsubsection{Hessian matrix validation}\label{sect:HessianMatrixValidation}
 
-An instance of the \HighsHessian class is validated for illegal
+An instance of the \HighsHessian{} class is validated for illegal
 indexing in the same way as the constraint matrix. To discuss the
 interpretation of the values in the instance, let $G$ be the
 corresponding matrix. \HiGHS determines the matrix
 $Q=\frac{1}{2}(G+G^T)$ and assesses its values the same way as the
 constraint matrix, using the same option values for small and large
-entries. If $Q$ is identically zero, then the \HighsHessian
+entries. If $Q$ is identically zero, then the \HighsHessian{}
 instance is ignored, so the model will be solved as an LP. Otherwise,
 $Q$ will be used as the quadratic term in the objective function.
 
 As well as guaranteeing that the QP solver operates with a symmetric
 Hessian matrix, this allows flexibility in the definition of the
-Hessian matrix. If the original \HighsHessian instance
+Hessian matrix. If the original \HighsHessian{} instance
 represents an entire symmetric matrix then, clearly, $Q=G$. However,
 it may be convenient to for $G$ to be only the strictly upper
 (equivalently lower) triangular portion of the Hessian, in which case
@@ -360,23 +360,23 @@ performed is a check that all the diagonal entries of $Q$ are at least
 
 \subsection{Methods}\label{sect:ModelDefinitionMethods}
 In \Cpp, the model is passed to \HiGHS by creating an instance of the
-\HighsModel class (or using a \HighsLp instance if the model of
+\HighsModel{} class (or using a \HighsLp{} instance if the model of
 interest is only an LP or MIP), populating its data, and passing it to
 \HiGHS using \HighsPassModelGeneric as defined in
 Table~\ref{tab:HighsPassModel}.
 
 The forms of the argument to \HighsPassModelGeneric are defined so that
-maximum memory efficiency can be achieved by passing the \HighsModel
-or \HighsLp instance via \code{std::move}. For example, suppose that
-the user's \HighsModel instance is called \code{model}. Calling
+maximum memory efficiency can be achieved by passing the \HighsModel{}
+or \HighsLp{} instance via \code{std::move}. For example, suppose that
+the user's \HighsModel{} instance is called \code{model}. Calling
 \code{passModel(std::move(model))} ensures that the array content of
-the user's \HighsModel instance is moved to the \HighsModel instance
+the user's \HighsModel{} instance is moved to the \HighsModel{} instance
 of the incumbent model in \Highs without creating an additional copy
 at any stage. A consequence of this approach is that, on return from
-\HighsPassModelGeneric, the user's \HighsModel instance has no array
+\HighsPassModelGeneric, the user's \HighsModel{} instance has no array
 content.
 
-In the \C interface, the components of a \HighsModel or \HighsLp
+In the \C interface, the components of a \HighsModel{} or \HighsLp{}
 instance are passed as indivdual scalars or pointers. The methods for
 an LP, MIP or general model are defined in
 Table~\ref{tab:CHighsPassModel}, where the parameter names are
@@ -389,7 +389,7 @@ class members are used.
     \HighsPassModelModelDef \\
     \HighsPassModelLpDef 
   \end{tabular}}
-\caption{Passing a \HighsModel or \HighsLp to \Highs in \Cpp}\label{tab:HighsPassModel}
+\caption{Passing a \HighsModel{} or \HighsLp{} to \Highs in \Cpp}\label{tab:HighsPassModel}
 \end{table}
 
 \input TableCHighsPassModel
@@ -436,12 +436,12 @@ Scalar information about the solution of the model is held by \HiGHS
 in an instance of the \HighsInfo class. The members of this class are
 listed in Table~\ref{tab:HighsInfo}. The truth of \HighsInfoValid
 indicates whether the values of the remaining members are valid. In
-the \Cpp interface, a \Const reference to this instance of the \HighsInfo
+the \Cpp interface, a \Const{} reference to this instance of the \HighsInfo
 class is available. Values of individual members can also be obtained,
 and this is how they are in the \C interface.
 
-The values of \HighsInfoPrimalSolutionStatus and
-\HighsInfoDualSolutionStatus indicate the nature of the solution
+The values of \HighsInfoPrimalSolutionStatus{} and
+\HighsInfoDualSolutionStatus{} indicate the nature of the solution
 values that are available. Valid values for the primal or dual
 infeasiblility data are naturally non-negative. Thus a negative value
 indicates that the data are not available.
@@ -477,11 +477,11 @@ Type&Name&Description\\\hline
 \end{table}
 
 \subsection{Solution values}
-Solution values for the model are held by \HiGHS in an instance of the \HighsSolution structure. Its components are
+Solution values for the model are held by \HiGHS in an instance of the \HighsSolution{} structure. Its components are
 listed in Table~\ref{tab:HighsSolution}.
 
-In the \Cpp interface, a \Const reference to this instance of the
-\HighsSolution structure is available, and a copy of the same data can
+In the \Cpp interface, a \Const{} reference to this instance of the
+\HighsSolution{} structure is available, and a copy of the same data can
 be obtained via the \C interface. When the objective sense is
 switched, the dual optimality condition changes sign, and this is
 reflected in the sign of the dual values.
@@ -489,8 +489,8 @@ reflected in the sign of the dual values.
 The solution data that are available from \HiGHS depends on the value
 of the model status, when it was identified, and how. To identify what
 solution data are available, and whether the solution values are
-feasible or not, consult the values of \HighsInfoPrimalSolutionStatus
-and \HighsInfoDualSolutionStatus via \HighsInfo (Table~\ref{tab:HighsInfo}).
+feasible or not, consult the values of \HighsInfoPrimalSolutionStatus{}
+and \HighsInfoDualSolutionStatus{} via \HighsInfo (Table~\ref{tab:HighsInfo}).
 
 \begin{table}[ht]
 \leftline{
@@ -501,7 +501,7 @@ Type&Name&Description\\\hline
 \VectorDouble & \HighsSolutionColDual & Dual values for columns\\
 \VectorDouble & \HighsSolutionRowDual & Dual values for rows\\\hline
   \end{tabular}}
-\caption{Members of the \HighsSolution structure}\label{tab:HighsSolution}
+\caption{Members of the \HighsSolution{} structure}\label{tab:HighsSolution}
 \end{table}
 
 \subsection{The variable and constraint status}
@@ -528,7 +528,7 @@ Type&Name&Description\\\hline
 The \HighsBasisStatus type is an \EnumClass, with members
 listed in Table~\ref{tab:HighsBasisStatusEnumClass}, where the integer
 value given is the cast used in the \C interface.
-In the \Cpp interface, a \Const reference to this instance of the
+In the \Cpp interface, a \Const{} reference to this instance of the
 \HighsBasis structure is available, and a copy of the same data can be obtained
 via the \C interface.
 
@@ -542,7 +542,7 @@ via the \C interface.
 \HighsBasisStatusZero & 3 & Free and set to zero\\
 \hline
   \end{tabular}}
-  \caption{The \EnumClass type names for \HighsBasisStatus}\label{tab:HighsBasisStatusEnumClass}
+  \caption{The \EnumClass{} type names for \HighsBasisStatus}\label{tab:HighsBasisStatusEnumClass}
 \end{table}
 
 \subsection{Methods}
@@ -584,17 +584,17 @@ After ``solving'' the model it is essential to inspect the model status, since t
 \begin{table}[ht]
 \leftline{
   \begin{tabular}{lp{13cm}}
-    \HighsInt \code{Highs\_getModelStatus(}&\VoidStar \HighsInstance\code{);}
+    \HighsInt{} \code{Highs\_getModelStatus(}&\VoidStarHighsInstance\code{);}
   \end{tabular}}
 
 \leftline{
   \begin{tabular}{lp{13cm}}
-    \HighsInt \code{Highs\_getScaledModelStatus(}&\VoidStar \HighsInstance\code{);}
+    \HighsInt{} \code{Highs\_getScaledModelStatus(}&\VoidStarHighsInstance\code{);}
   \end{tabular}}
 
 \leftline{
   \begin{tabular}{lp{13cm}}
-    \HighsInt \code{Highs\_getIntInfoValue(}&\VoidStar \HighsInstance\codeComma\Const \CharStar \HighsInfoName\codeComma \HighsIntStar \HighsInfoValue \code{);}\\
+    \HighsInt{} \code{Highs\_getIntInfoValue(}&\VoidStarHighsInstance\codeComma\Const{} \CharStar \HighsInfoName\codeComma \HighsIntStar{} \HighsInfoValue{} \code{);}\\
   \end{tabular}}
 \caption{Extracting the solution data via the \C interface}\label{tab:SolutionDataC}
 \end{table}
