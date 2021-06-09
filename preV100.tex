@@ -61,7 +61,7 @@ document.
   \code{dual\_solution\_status}. These are interpreted using
   the values in Table~\ref{tab:HighsSolutionStatus}.
   \begin{table}[ht]
-    \centerline{
+    \leftline{
       \begin{tabular}{|l|l|p{8cm}|}\hline
         Value & \Cpp constant & Interpretation\\\hline
         0 & \code{kSolutionStatusNone} & There is no solution available \\
@@ -167,7 +167,7 @@ between current and former model status values is set out in
 Table~\ref{tab:HighsModelStatus}.
 
 \begin{sidewaystable}
-\centerline{
+\leftline{
   \begin{tabular}{|p{8cm}|r|l|r|l|}\hline
 &\multicolumn2{c|}{Currently}&\multicolumn2{c|}{Formerly}\\\cline{2-5}
     Description&Integer&\HighsModelStatus&Integer&\HighsModelStatus\\\hline
@@ -216,7 +216,7 @@ log output goes to both the console and to the file
 file is controlled by the \code{HighsOptions} settings in
 Table~\ref{tab:HighsLogging}.
 \begin{table}[ht]
-\centerline{
+\leftline{
   \begin{tabular}{|l|l|l|p{10cm}|}\hline
     Option name & Type & Default & Description\\\hline
     \code{output\_flag} & \code{bool} & \code{true} & Determines whether there is logging output from \HiGHS\\
@@ -253,7 +253,7 @@ changed. The current and former names, together with integer values
 and short description are given in Table~\ref{tab:ChangedConstants}.
 
 \begin{sidewaystable}
-\centerline{
+\leftline{
   \begin{tabular}{|l|l|r|p{10cm}|}\hline
     Currently & Formerly & Value & Description \\\hline
     \ObjSenseMinimize & \code{ObjSense::MINIMIZE} & -1 & Objective sense is minimize\\
@@ -285,7 +285,7 @@ the \C convention! For consistency and clarity, they now all return
 \HighsStatus.
 
 \begin{table}[ht]
-\centerline{
+\leftline{
   \begin{tabular}{|l|p{8cm}|}\hline
 \Cpp \HiGHS class & \C interface equivalent(s)\\\hline
 \HighsAddRow & \CHighsAddRow\\\hline
@@ -376,7 +376,7 @@ to \HiGHS by beginning ``\code{Highs\_}''.
 Deprecated methods in the \C interface are listed in Table~\ref{tab:DeprecatedMethodsC}
 
 \begin{sidewaystable}
-\centerline{
+\leftline{
   \begin{tabular}{|l|p{7cm}|l|p{6cm}|}\hline
 \multicolumn2{|c|}{Deprecated}&\multicolumn2{c|}{Replacement}\\\hline
 \Cpp \HiGHS class & \C interface equivalent(s) & \Cpp & \C equivalent(s) \\\hline
@@ -420,7 +420,7 @@ Deprecated methods in the \C interface are listed in Table~\ref{tab:DeprecatedMe
 \end{sidewaystable}
 
 \begin{table}[ht]
-\centerline{
+\leftline{
   \begin{tabular}{|p{5cm}|p{9cm}|}\hline
 Deprecated&Replacement\\\hline
 \code{Highs\_call} & \code{Highs\_lpCall}; \code{Highs\_mipCall} ; \code{Highs\_qpCall} \\

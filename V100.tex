@@ -8,6 +8,7 @@
 \usepackage{colortbl}
 \usepackage{algpseudocode}
 \usepackage{algorithm} 
+\usepackage{mdframed} 
 
 \input Alias
 
@@ -26,11 +27,8 @@
 \tableofcontents
 
 \section{Introduction}
-%
 This document defines what \HiGHS can do, and how it can be run and
-controlled externally. It does not describe the theory underlying the
-optimzation methods that it uses, how they implemented, or how \HiGHS
-is engineered internally. Mathematically, this document assumes no
+controlled externally. Mathematically, this document assumes no
 more than familiarity with the definition of a linear programming (LP)
 problem, and the fact that they can be solved with either the simplex
 algorithm or interior point methods. Although \HiGHS can solve
@@ -38,40 +36,20 @@ mixed-integer programming (MIP) and quadratic programming (QP)
 problems, users who have no interest in doing so can ingore references
 to these problem classes.
 
-\HiGHS was developed from the dual simplex solver of
-Huangfu~\cite{HuHa13} by adding the interior point method solver (for
-LP problems) of Schork~\cite{ScGo20}, the MIP solver of Gottwald, and
-the convex QP solver of Feldmeier. Its presolve for LP and MIP was
-written by Galabova and Gottwald, and its primal simplex solver was
-written by Hall, based on work by Huangfu. Other features have been
-written by Hall.
-
-\HiGHS is mainly written in \Cpp with \OpenMP directives, but also has
-some \C. The primary interface to \HiGHS is via \Cpp, but it also has full
-interfaces for \C, \Csharp, \Fortran and \Python. There are also
-third-party interfaces to \HiGHS from \Julia, \Rust and \Javascript.
-This document describes the \Cpp interface and corresponding \C
-interface methods. The other interfaces are analogous to the \C
-interface.
-
-\HiGHS uses \CMake as a build system and requires version 3.15. It has
-been developed and tested on various Linux, MacOS and Windows
-installations using both the GNU (\gpp) and Intel (\icc) \Cpp
-compilers. Note that HiGHS requires (at least) version 4.9 of the GNU
-compiler. If \OpenMP is unavailable to \HiGHS, then it will compile,
-but will run in serial. \HiGHS has no third-party dependencies.
-
-Although \HiGHS is freely available under the MIT license, we would be
-pleased to learn about users' experience and give advice via email
-sent to \HighsEmail. If you use \HiGHS in an academic context, please
-acknowledge this and cite the article of Huangfu and
-Hall~\cite{HuHa13}, unless you make specific use of the interior point
-method solver, in which case you should cite the work of Schork and
-Gondzio~\cite{ScGo20}.
+The following is a list of \HiGHS-related information not covered in this document and, if available, where it may be found.
+\begin{itemize}
+  \item How to download and build \HiGHS. See \HighsTextURL.
+  \item How to call \HiGHS from languages other than \Cpp and \C. See \HighsTextURL.
+  \item How \HiGHS is engineered internally. This is not currently documented byond the source code.
+  \item The theory underlying the optimzation methods used by
+    \HiGHS. See (in particular) the work on high performance dual
+    simplex by Huangfu and Hall~\cite{HuHa13}, and on the interior
+    point method by Schork and Gondzio~\cite{ScGo20}.
+\end{itemize}
 
 \subsection{Overview}
 
-Sections~\ref{sect:ModelDefinition}-~\ref{sect:Options} set out what
+Sections~\ref{sect:ModelDefinition}--\ref{sect:Options} set out what
 \HiGHS can do, the methods by which this is achieved, and the
 parameters that control them. This is done by introducing the data
 structures of \HiGHS that are used in the \Cpp interface, the methods
@@ -94,38 +72,36 @@ values. Their definition, default values and the means of modifying
 them are defined in Section~\ref{sect:Options}.
 
 \subsection{Creating a \Highs instance}
-%
 In \Cpp, an instance of the \Highs class named (for example) \HighsInstance is created thus
-\begin{itemize}
-  \item[] \Highs \HighsInstance;
-\end{itemize}
-This requires the inclusion of the header file \HighsH.
-
-In \C, an instance of \Highs is created and destroyed using the
-methods defined in Table~\ref{tab:CHighsCreateDestroy}.
+\begin{tabbing}
+\ \ \Highs \HighsInstance;
+\end{tabbing}
+This requires the inclusion of the header file \HighsH. In \C, an
+instance of \Highs is created and destroyed using the methods defined
+in Table~\ref{tab:CHighsCreateDestroy}, so an instance named (for
+example) \HighsInstance is created and destroyed thus
 %
-\begin{table}[ht]
-\leftline{
-  \begin{tabular}{p{15cm}}
-    \CHighsCreateDef \\
-    \CHighsDestroyDef
-  \end{tabular}}
-\caption{Creating and destroying a \Highs instance in \C using the methods \CHighsCreate and \CHighsDestroy}\label{tab:CHighsCreateDestroy}
-\end{table}
-%
-So an instance named (for example) \HighsInstance is created and destroyed thus
-\begin{itemize}
-  \item[] \code{void* highs = \CHighsCreate;}
-  \item[] \code{Highs\_destroy(highs);}
-\end{itemize}
+\begin{tabbing}
+\ \ \code{void* highs = \CHighsCreate;}\\
+\ \ \code{Highs\_destroy(highs);}
+\end{tabbing}
 For all other methods in the \C interface, the first argument is the void pointer \HighsInstance.
 
+\begin{table}[ht]
+%  \begin{mdframed}
+    \leftline{
+      \begin{tabular}{p{15cm}}
+        \CHighsCreateDef \\
+        \CHighsDestroyDef
+    \end{tabular}}
+    \caption{Methods in the \C interface to create and destroy a \Highs instance}\label{tab:CHighsCreateDestroy}
+%\end{mdframed}
+\end{table}
+
 \subsection{Long integers}
-%
 \input HighsInt
 
 \subsection{Return values}
-%
 Most methods in the \Cpp and \C interfaces return a status to indicate
 the success of the call. Those that do not are methods where model or
 solution information is returned (and success can be assumed). The
@@ -136,7 +112,6 @@ value given is the cast used in the \C interface.
 \input TableHighsStatusEnumClass
 
 \subsection{Terminology}
-%
 The word ``vector'' is used to refer to the mathematical object in the
 definition of a model. Within code, the corresponding data structure
 is referred to as an array. The model within \HiGHS that has been
@@ -149,7 +124,6 @@ For the \Cpp interface and, to an increasing extent internally, \HiGHS
 now conforms to the Google \Cpp style guide~\cite{GoogleStyleGuide}.
 
 \section{Model definition}\label{sect:ModelDefinition}
-%
 Models in \HiGHS are defined as an instance of the \HighsModel
 class. This consists of one instance of the \HighsLp class,
 and one instance of the \HighsHessian class. Communication of models
@@ -158,7 +132,6 @@ to and from \HiGHS is possible via instances of the \HighsLp or
 of models is via scalar values and addresses of arrays.
 
 \subsection{The \HighsLp class}\label{sect:HighsLp}
-%
 
 The \HighsLp class allows LP and MIP problems of the form
 $$
@@ -175,22 +148,22 @@ Table~\ref{tab:HighsLp}. Since \HiGHS is written in \Cpp and \C, all
 indexing begins from zero.
 
 \begin{table}[ht]
-\centerline{
+\leftline{
   \begin{tabular}{|l|l|p{8cm}|}\hline
 Type&Name&Description\\\hline
 \HighsInt&\NumCol&Number of columns (variables) $\bfx$ in the model\\
 \HighsInt&\NumRow&Number of rows (constraints) in the model\\
-\VectorHighsInt&\Astart&Start of each vector of $A$ in the compressed sparse storage\\
-\VectorHighsInt&\Aindex&Indices of each vector of $A$ in the compressed sparse storage\\
-\VectorDouble&\Avalue&Values of each vector of $A$ in the compressed sparse storage\\
+\ObjSense&\Sense&Sense of the objective: minimize or maximize\\
+\Double&\Offset&Constant term $f$ in the objective function\\
 \VectorDouble&\ColCost&Cost (gradient) vector $\bfc$ in the objective function\\
 \VectorDouble&\ColLower&Lower bounds $\bfl$ on the columns\\
 \VectorDouble&\ColUpper&Upper bounds $\bfu$ on the columns\\
 \VectorDouble&\RowLower&Lower bounds $\bfL$ on the rows\\
 \VectorDouble&\RowUpper&Upper bounds $\bfU$ on the rows\\
 \MatrixOrientation&\Orientation&Orientation of the constraint matrix\\
-\ObjSense&\Sense&Sense of the objective: minimize or maximize\\
-\Double&\Offset&Constant term $f$ in the objective function\\
+\VectorHighsInt&\Astart&Start of each vector of $A$ in the compressed sparse storage\\
+\VectorHighsInt&\Aindex&Indices of each vector of $A$ in the compressed sparse storage\\
+\VectorDouble&\Avalue&Values of each vector of $A$ in the compressed sparse storage\\
 \String&\ModelName&The name of the model\\
 \VectorString&\ColName&The names of the columns\\
 \VectorString&\RowName&The names of the rows\\
@@ -205,8 +178,8 @@ Three members of the \HighsLp class (\Orientation, \Sense and
 where the integer value given is the cast used in the \C interface.
 
 \begin{table}[ht]
-  \centerline{
-    \begin{tabular}{|l|r|p{8cm}|}\hline
+  \leftline{
+    \begin{tabular}{|l|r|p{6cm}|}\hline
       Name&Integer&Description\\\hline
       \MatrixOrientationNone&0&Undefined matrix orientation\\
       \MatrixOrientationColwise&1&Column-wise matrix orientation\\
@@ -219,9 +192,17 @@ where the integer value given is the cast used in the \C interface.
   \caption{The \EnumClass type names for \HighsLp class members}\label{tab:HighsLpEnumClass}
 \end{table}
  
-%
+\subsubsection{Objective function}
+The sense of the objective (minimize or maximize) is defined by the
+value of the \Sense member of the \HighsLp class. This is of type
+\ObjSense, an \EnumClass whose names are given in
+Table~\ref{tab:HighsLpEnumClass}. When a \HighsLp instance is created,
+\Sense is set to \ObjSenseMinimize so, unless changed, the objective
+is minimized. In the \C interface, an \HighsInt parameter indicates
+whether the matrix is to be minimized or maximized according to the
+integer values in Table~\ref{tab:HighsLpEnumClass}.
+
 \subsubsection{Constraint matrix}
-%
 The constraint matrix $A$ is held using compressed sparse
 storage. Users unfamiliar with this format should consult
 Wikipedia~\cite{WikiSparseMatrix}. Since solvers generally access the
@@ -245,19 +226,7 @@ the number of entries in the arrays \Aindex and \Avalue. Other
 requirements are discussed in
 Section~\ref{sect:ConstraintMatrixValidation}.
 
-\subsubsection{Objective function}
-%
-The sense of the objective (minimize or maximize) is defined by the
-value of the \Sense member of the \HighsLp class. This is of type
-\ObjSense, an \EnumClass whose names are given in
-Table~\ref{tab:HighsLpEnumClass}. When a \HighsLp instance is created,
-\Sense is set to \ObjSenseMinimize so, unless changed, the objective
-is minimized. In the \C interface, an \HighsInt parameter indicates
-whether the matrix is to be minimized or maximized according to the
-integer values in Table~\ref{tab:HighsLpEnumClass}.
-
 \subsubsection{Names}
-%
 When populating an instance of the \HighsLp class, no name data
 needs to be supplied, and name data cannot be supplied via the \C
 interface. The \ModelName member of the \HighsLp class is the
@@ -271,7 +240,6 @@ are available they are printed when \HiGHS writes the model or
 solution.
 
 \subsubsection{Integrality}
-%
 The \Integrality member of the \HighsLp class indicates which
 variables (if any) must take integer values. If this member is of zero
 size, or if all its entries are \HighsVarTypeContinuous, the set
@@ -284,7 +252,6 @@ continuous or must take an integer value according to the integer
 values in Table~\ref{tab:HighsLpEnumClass}.
 
 \subsection{The \HighsHessian class}\label{sect:HighsHessian}
-%
 The \HighsHessian class allows the \HighsModel class to represent the
 Hessian matrix of the quadratic term in the objective function that
 distinguishes QP problems from LP problems. The representation of the
@@ -292,7 +259,7 @@ Hessian matrix is column-wise, and the \HighsHessian class members are
 defined in Table~\ref{tab:HighsHessian}.
 
 \begin{table}[ht]
-\centerline{
+\leftline{
   \begin{tabular}{|l|l|p{11cm}|}\hline
 Type&Name&Description\\\hline
 \HighsInt&\Qdim&Number of columns in the Hessian matrix\\
@@ -317,6 +284,33 @@ When \HiGHS obtains a new model, it is validated for correctness and
 extreme data values. Control of the latter is determined by option
 values.
 
+\subsubsection{Cost validation}\label{sect:CostValidation}
+
+In \Cpp, if the size of \ColCost is less than \NumCol then \HiGHS
+will return an error. Any entries found to be greater
+than the \HighsOptions value \InfiniteCost in absolute value will cause \HiGHS to return
+with \inred{a warning or an error}.
+
+
+\subsubsection{Bound validation}\label{sect:BoundValidation}
+
+In \Cpp, if the size of \ColLower or \ColUpper is less than \NumCol,
+or if the size of \RowLower or \RowUpper is less than \NumRow, then
+\HiGHS will return an error. Any lower bound found to be greater than
+or equal to the \HighsOptions value \InfiniteBound, or any upper bound found to be less than
+or equal to -\InfiniteBound, will cause \HiGHS to return with an error.
+
+Bounds that are inconsistent due to the lower bound exceeding the
+upper bound are permitted in \HiGHS but, when found, a warning message
+will be issued. If \HiGHS is asked to solve a model with inconsistent
+bounds, it will identify it as being infeasible.
+
+Any lower bounds found to be less than or equal to -\InfiniteBound
+will be ignored (treated as if they were negative infinity).  Any
+upper bounds found to be greater than or equal to \InfiniteBound will
+be ignored (treated as if they were positive infinity). \HiGHS will
+report the number of bounds ignored in this way.
+
 \subsubsection{Constraint matrix validation}\label{sect:ConstraintMatrixValidation}
 
 There is considerable scope for errors when defining a matrix in
@@ -330,39 +324,11 @@ entries. If the data fails to satisfy any of these conditions, \HiGHS
 will return an error.
 
 There are limits on the minimum and maximum absolute values in the
-constraint matrix that \HiGHS will use. These limits are
-\HighsOptions values \SmallMatrixValue and
-\LargeMatrixValue. Any entries below \SmallMatrixValue in absolute
-value are ignored (with a warning) but entries found to be greater
-than \LargeMatrixValue in absolute value will cause \HiGHS to return
-with an error.
-
-\subsubsection{Cost validation}\label{sect:CostValidation}
-
-In \Cpp, if the size of \ColCost is less than \NumCol then \HiGHS
-will return an error. Any entries found to be greater
-than \InfiniteCost in absolute value will cause \HiGHS to return
-with \inred{a warning or an error}.
-
-
-\subsubsection{Bound validation}\label{sect:BoundValidation}
-
-In \Cpp, if the size of \ColLower or \ColUpper is less than \NumCol,
-or if the size of \RowLower or \RowUpper is less than \NumRow, then
-\HiGHS will return an error. Any lower bound found to be greater than
-or equal to \InfiniteBound, or any upper bound found to be less than
-or equal to -\InfiniteBound, will cause \HiGHS to return with an error.
-
-Bounds that are inconsistent due to the lower bound exceeding the
-upper bound are permitted in \HiGHS but, when found, a warning message
-will be issued. If \HiGHS is asked to solve a model with inconsistent
-bounds, it will identify it as being infeasible.
-
-Any lower bounds found to be less than or equal to -\InfiniteBound
-will be ignored (treated as if they were negative infinity).  Any
-upper bounds found to be greater than or equal to \InfiniteBound will
-be ignored (treated as if they were positive infinity). \HiGHS will
-report the number of bounds ignored in this way.
+constraint matrix that \HiGHS will use. These limits are \HighsOptions
+values \SmallMatrixValue and \LargeMatrixValue. Any entries below
+\SmallMatrixValue in absolute value are ignored (with a warning) but
+entries found to be greater than \LargeMatrixValue in absolute value
+will cause \HiGHS to return with an error.
 
 \subsubsection{Hessian matrix validation}\label{sect:HessianMatrixValidation}
 
@@ -393,23 +359,13 @@ performed is a check that all the diagonal entries of $Q$ are at least
 \SmallMatrixValue.
 
 \subsection{Methods}\label{sect:ModelDefinitionMethods}
-
 In \Cpp, the model is passed to \HiGHS by creating an instance of the
 \HighsModel class (or using a \HighsLp instance if the model of
 interest is only an LP or MIP), populating its data, and passing it to
-\HiGHS using \HighsPassModel as defined in
+\HiGHS using \HighsPassModelGeneric as defined in
 Table~\ref{tab:HighsPassModel}.
-%
-\begin{table}[ht]
-\centerline{
-  \begin{tabular}{p{15cm}}
-    \HighsPassModelModelDef \\
-    \HighsPassModelLpDef 
-  \end{tabular}}
-\caption{Passing a \HighsModel or \HighsLp to \Highs in \Cpp}\label{tab:HighsPassModel}
-\end{table}
-%
-The forms of the argument to \HighsPassModel are defined so that
+
+The forms of the argument to \HighsPassModelGeneric are defined so that
 maximum memory efficiency can be achieved by passing the \HighsModel
 or \HighsLp instance via \code{std::move}. For example, suppose that
 the user's \HighsModel instance is called \code{model}. Calling
@@ -417,7 +373,7 @@ the user's \HighsModel instance is called \code{model}. Calling
 the user's \HighsModel instance is moved to the \HighsModel instance
 of the incumbent model in \Highs without creating an additional copy
 at any stage. A consequence of this approach is that, on return from
-\HighsPassModel, the user's \HighsModel instance has no array
+\HighsPassModelGeneric, the user's \HighsModel instance has no array
 content.
 
 In the \C interface, the components of a \HighsModel or \HighsLp
@@ -426,81 +382,25 @@ an LP, MIP or general model are defined in
 Table~\ref{tab:CHighsPassModel}, where the parameter names are
 arbitrary. However, for comparison, the names of the corresponding
 class members are used.
-%
+
 \begin{table}[ht]
 \leftline{
-  \begin{tabular}{lp{13cm}}
-    \HighsInt \code{Highs\_passLp(}&
-    \VoidStar \HighsInstance,\\
-    &\Const \HighsInt \NumCol,
-    \Const \HighsInt \NumRow,\\
-    &\Const \HighsInt \NumNz,\\
-    &\Const \HighsInt \Orientation,
-    \Const \HighsInt \Sense,\\
-    &\Const \Double \Offset,\\
-    &\Const \DoubleStar \ColCost,
-    \Const \DoubleStar \ColLower,\\
-    &\Const \DoubleStar \ColUpper,
-    \Const \DoubleStar \RowLower,\\
-    &\Const \DoubleStar \RowUpper,
-    \Const \HighsIntStar \Astart,\\
-    &\Const \HighsIntStar \Aindex,
-    \Const \DoubleStar \Avalue,
-    \code{);} \\\noalign{\medskip}
-    \HighsInt \code{Highs\_passMip(}&
-    \VoidStar \HighsInstance,\\
-    &\Const \HighsInt \NumCol,
-    \Const \HighsInt \NumRow,\\
-    &\Const \HighsInt \NumNz,\\
-    &\Const \HighsInt \Orientation,
-    \Const \HighsInt \Sense,\\
-    &\Const \Double \Offset,\\
-    &\Const \DoubleStar \ColCost,
-    \Const \DoubleStar \ColLower,\\
-    &\Const \DoubleStar \ColUpper,
-    \Const \DoubleStar \RowLower,\\
-    &\Const \DoubleStar \RowUpper,
-    \Const \HighsIntStar \Astart,\\
-    &\Const \HighsIntStar \Aindex,
-    \Const \DoubleStar \Avalue,\\
-    &\Const \HighsIntStar \Integrality
-    \code{);} \\\noalign{\medskip}
-    \HighsInt \code{Highs\_passModel(}&
-    \VoidStar \HighsInstance,\\
-    &\Const \HighsInt \NumCol,
-    \Const \HighsInt \NumRow,\\
-    &\Const \HighsInt \NumNz,
-    \Const \HighsInt \HessianNumNz,\\
-    &\Const \HighsInt \Orientation,
-    \Const \HighsInt \Sense,\\
-    &\Const \Double \Offset,\\
-    &\Const \DoubleStar \ColCost,
-    \Const \DoubleStar \ColLower,\\
-    &\Const \DoubleStar \ColUpper,
-    \Const \DoubleStar \RowLower,\\
-    &\Const \DoubleStar \RowUpper,
-    \Const \HighsIntStar \Astart,\\
-    &\Const \HighsIntStar \Aindex,
-    \Const \DoubleStar \Avalue,\\
-    &\Const \HighsIntStar \Qstart,
-    \Const \HighsIntStar \Qindex,\\
-    &\Const \DoubleStar \Qvalue,\\
-    &\Const \HighsIntStar \Integrality
-    \code{);}
+  \begin{tabular}{p{15cm}}
+    \HighsPassModelModelDef \\
+    \HighsPassModelLpDef 
   \end{tabular}}
-\caption{Passing data for a \HighsModel or \HighsLp to \Highs in \C}\label{tab:CHighsPassModel}
+\caption{Passing a \HighsModel or \HighsLp to \Highs in \Cpp}\label{tab:HighsPassModel}
 \end{table}
-%
+
+\input TableCHighsPassModel
 
 \section{Model solution}\label{sect:ModelSolution}
-%
 When the incumbent model is solved, the solution data that is
 available from \HiGHS comes from four sources: the model status, a set
 of scalar information values, the solution of the model and the status
 of each variable and constraint.
 
 \subsection{The model status}
-%
 When the incumbent model is solved, \HiGHS will identify a model
 status. In \Cpp this value is taken from an \code{enum class}
 \HighsModelStatus, whose entries are listed in
@@ -508,7 +408,7 @@ Table~\ref{tab:HighsModelStatus}. The corresponding integer values
 used in the \C interface are also listed.
 
 \begin{table}[ht]
-\centerline{
+\leftline{
   \begin{tabular}{|r|l|p{10cm}|}\hline
 Integer&\HighsModelStatus&Description\\\hline
 0&\code{kNotset}&Not set\\
@@ -532,7 +432,6 @@ Integer&\HighsModelStatus&Description\\\hline
 \end{table}
 
 \subsection{Scalar information}
-%
 Scalar information about the solution of the model is held by \HiGHS
 in an instance of the \HighsInfo class. The members of this class are
 listed in Table~\ref{tab:HighsInfo}. The truth of \HighsInfoValid
@@ -540,8 +439,19 @@ indicates whether the values of the remaining members are valid. In
 the \Cpp interface, a \Const reference to this instance of the \HighsInfo
 class is available. Values of individual members can also be obtained,
 and this is how they are in the \C interface.
+
+The values of \HighsInfoPrimalSolutionStatus and
+\HighsInfoDualSolutionStatus indicate the nature of the solution
+values that are available. Valid values for the primal or dual
+infeasiblility data are naturally non-negative. Thus a negative value
+indicates that the data are not available.
+
+Methods in ihe \Cpp interface allows values of individual members to
+be obtained, and it is via correponding methods in the \C interface
+that these information values are obtained.
+
 \begin{table}[ht]
-\centerline{
+\leftline{
   \begin{tabular}{|l|l|p{10cm}|}\hline
 Type&Name&Description\\\hline
 \Bool & \HighsInfoValid &Validity of the data in the class instance\\
@@ -565,33 +475,11 @@ Type&Name&Description\\\hline
   \end{tabular}}
 \caption{Members of the \HighsInfo class}\label{tab:HighsInfo}
 \end{table}
-%
-The values of \HighsInfoPrimalSolutionStatus and
-\HighsInfoDualSolutionStatus indicate the nature of the solution
-values that are available. Valid values for the primal or dual
-infeasiblility data are naturally non-negative. Thus a negative value
-indicates that the data are not available.
-
-Methods in ihe \Cpp interface allows values of individual members to
-be obtained, and it is via correponding methods in the \C interface
-that these information values are obtained.
 
 \subsection{Solution values}
-%
 Solution values for the model are held by \HiGHS in an instance of the \HighsSolution structure. Its components are
-listed in Table~\ref{tab:HighsSolution}
-\begin{table}[ht]
-\centerline{
-  \begin{tabular}{|l|l|p{10cm}|}\hline
-Type&Name&Description\\\hline
-\VectorDouble & \HighsSolutionColValue & (Primal) solution values for columns (variables)\\
-\VectorDouble & \HighsSolutionRowValue & (Primal) solution values for rows (constraints)\\
-\VectorDouble & \HighsSolutionColDual & Dual values for columns\\
-\VectorDouble & \HighsSolutionRowDual & Dual values for rows\\\hline
-  \end{tabular}}
-\caption{Members of the \HighsSolution structure}\label{tab:HighsSolution}
-\end{table}
-%
+listed in Table~\ref{tab:HighsSolution}.
+
 In the \Cpp interface, a \Const reference to this instance of the
 \HighsSolution structure is available, and a copy of the same data can
 be obtained via the \C interface. When the objective sense is
@@ -602,24 +490,41 @@ The solution data that are available from \HiGHS depends on the value
 of the model status, when it was identified, and how. To identify what
 solution data are available, and whether the solution values are
 feasible or not, consult the values of \HighsInfoPrimalSolutionStatus
-and \HighsInfoDualSolutionStatus.
+and \HighsInfoDualSolutionStatus via \HighsInfo (Table~\ref{tab:HighsInfo}).
+
+\begin{table}[ht]
+\leftline{
+  \begin{tabular}{|l|l|p{8cm}|}\hline
+Type&Name&Description\\\hline
+\VectorDouble & \HighsSolutionColValue & (Primal) solution values for columns (variables)\\
+\VectorDouble & \HighsSolutionRowValue & (Primal) solution values for rows (constraints)\\
+\VectorDouble & \HighsSolutionColDual & Dual values for columns\\
+\VectorDouble & \HighsSolutionRowDual & Dual values for rows\\\hline
+  \end{tabular}}
+\caption{Members of the \HighsSolution structure}\label{tab:HighsSolution}
+\end{table}
 
 \subsection{The variable and constraint status}
-%
 The status of each variable and constraint is held by \HiGHS in an
 instance of the \HighsBasis structure. In the case of LP problems,
 this is the {\em basis}. Its main components are listed in
-Table~\ref{tab:HighsBasis}
+Table~\ref{tab:HighsBasis}.
+
+The variable and constraint status data that are available from \HiGHS
+depends on the value of the model status, when it was identified, and
+how. To identify what variable and constraint status data are
+available, consult the value of \HighsInfoBasisStatus via \HighsInfo
+(Table~\ref{tab:HighsInfo}).
+
 \begin{table}[ht]
-\centerline{
-  \begin{tabular}{|l|l|p{10cm}|}\hline
+\leftline{
+  \begin{tabular}{|l|l|p{6cm}|}\hline
 Type&Name&Description\\\hline
 \VectorHighsBasisStatus & \HighsBasisColStatus & Status of the columns (variables)\\
 \VectorHighsBasisStatus & \HighsBasisRowStatus & Status of the rows (constraints)\\\hline
   \end{tabular}}
 \caption{Members of the \HighsBasis structure}\label{tab:HighsBasis}
 \end{table}
-%
 The \HighsBasisStatus type is an \EnumClass, with members
 listed in Table~\ref{tab:HighsBasisStatusEnumClass}, where the integer
 value given is the cast used in the \C interface.
@@ -628,42 +533,51 @@ In the \Cpp interface, a \Const reference to this instance of the
 via the \C interface.
 
 \begin{table}[ht]
-  \centerline{
-    \begin{tabular}{|l|r|p{11cm}|}\hline
+  \leftline{
+    \begin{tabular}{|l|r|p{5cm}|}\hline
       Name&Integer&Description\\\hline
 \HighsBasisStatusLower & 0 & At lower bound or fixed value\\
 \HighsBasisStatusBasic & 1 & Solved for (basic)\\
 \HighsBasisStatusUpper & 2 & At upper bound\\
-\HighsBasisStatusZero & 3 & Free and set to zero\\\hline
+\HighsBasisStatusZero & 3 & Free and set to zero\\
 \hline
   \end{tabular}}
   \caption{The \EnumClass type names for \HighsBasisStatus}\label{tab:HighsBasisStatusEnumClass}
 \end{table}
 
-The variable and constraint status data that are available from \HiGHS depends on the value
-of the model status, when it was identified, and how. To identify what
-variable and constraint status data are available, consult the value of \HighsInfoBasisStatus.
-
 \subsection{Methods}
 
-The incumbent model is solved by calling the \Cpp method
-\begin{itemize}
-\item \HighsRunDef
-\end{itemize}
-The corresponding method in the \C interface is
-\begin{itemize}
-\item \CHighsRunDef
-\end{itemize}
-%
-By default, \Highs will use what it considers to be the best solver of
-the appropriate type for the incumbent model, and the best run-time
-option settings. To force \Highs to solve with a particular solver and
-run-time options, \HighsOptions values in Section~\ref{sect:Options} may
-be modified.
+The incumbent model is solved by calling the \Cpp method \HighsRun or,
+in the \C interface, its equivalent method. Both are defined in
+Table~\ref{tab:HighsRun}. By default, \Highs will use what it
+considers to be the best solver of the appropriate type for the
+incumbent model, and the best run-time option settings. To force
+\Highs to solve with a particular solver and run-time options,
+\HighsOptions values defined in Section~\ref{sect:Options} may be modified.
+\begin{table}[ht]
+\leftline{
+  \begin{tabular}{|l|p{8cm}|}\hline
+\Cpp \HiGHS class & \C interface equivalent\\\hline
+\HighsRunDef& \CHighsRunDef\\\hline
+  \end{tabular}}
+\caption{Solving the incumbent model via the \Cpp and \C interface}\label{tab:HighsRun}
+\end{table}
+
+\section{Model extraction}\label{sect:ModelExtraction}
 
 \section{Model modification}\label{sect:ModelModification}
 
 \section{Other features}\label{sect:OtherFeatures}
+
+\subsection{Hot start}\label{sect:HotStart}
+
+\subsection{Presolve and postsolve}\label{sect:PresolvePostSolve}
+
+\subsection{Ranging}\label{sect:Ranging}
+
+\subsection{Basis solves}\label{sect:BasisSolves}
+
+\subsection{Primal and dual rays}\label{sect:Rays}
 
 \section{Options}\label{sect:Options}
 

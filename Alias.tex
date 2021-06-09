@@ -4,7 +4,7 @@
 \newcommand{\OpenMP}{\texttt{OpenMP}\xspace}
 \newcommand{\gpp}{\texttt{g++}\xspace}
 \newcommand{\icc}{\texttt{icc}\xspace}
-\newcommand{\HighsTextURL}{\texttt{http:/\!/www.HiGHS.dev/}\xspace}
+\newcommand{\HighsTextURL}{\texttt{http:/$\!$/www.HiGHS.dev/}\xspace}
 \newcommand{\HighsEmail}{\texttt{highsopt@gmail.com}\xspace}
 
 \newcommand{\C}{\mbox{C}\xspace}
@@ -216,12 +216,12 @@
 \newcommand{\MipHeuristicEffort}{\code{mip\_heuristic\_effort}\xspace}
 
 %Highs class methods
-\newcommand{\HighsPassModel}{\code{passModel}\xspace}
-\newcommand{\HighsPassModelModelDef}{\code{HighsStatus Highs::passModel(HighsModel model)}\xspace}
-\newcommand{\HighsPassModelLpDef}{\code{HighsStatus Highs::passModel(HighsLp lp)}\xspace}
+\newcommand{\HighsPassModelGeneric}{\code{passModel}\xspace}
+\newcommand{\HighsPassModelModelDef}{\code{HighsStatus passModel(HighsModel model);}\xspace}
+\newcommand{\HighsPassModelLpDef}{\code{HighsStatus passModel(HighsLp lp);}\xspace}
 
 \newcommand{\HighsRun}{\code{run()}\xspace}
-\newcommand{\HighsRunDef}{\code{HighsStatus Highs::run()}\xspace}
+\newcommand{\HighsRunDef}{\code{HighsStatus \HighsRun;}\xspace}
 
 \newcommand{\HighsAddRow}{\code{addRow}\xspace}
 \newcommand{\HighsAddRows}{\code{addRows}\xspace}
@@ -248,11 +248,11 @@
 
 %Highs C API methods
 \newcommand{\CHighsRun}{\code{highs\_run(void* highs)}\xspace}
-\newcommand{\CHighsRunDef}{\HighsInt \code{highs\_run(void* highs)}\xspace}
-\newcommand{\CHighsCreate}{\code{Highs\_create()}\xspace}
-\newcommand{\CHighsCreateDef}{\code{void* Highs\_create()}\xspace}
+\newcommand{\CHighsRunDef}{\HighsInt \CHighsRun;\xspace}
+\newcommand{\CHighsCreate}{\code{Highs\_create(void)}\xspace}
+\newcommand{\CHighsCreateDef}{\VoidStar \CHighsCreate;\xspace}
 \newcommand{\CHighsDestroy}{\code{Highs\_destroy(void* highs)}\xspace}
-\newcommand{\CHighsDestroyDef}{\code{void Highs\_destroy(void* highs)}\xspace}
+\newcommand{\CHighsDestroyDef}{\Void \CHighsDestroy;\xspace}
 
 \newcommand{\CHighsAddRow}{\code{Highs\_addRow}\xspace}
 \newcommand{\CHighsAddRows}{\code{Highs\_addRows}\xspace}

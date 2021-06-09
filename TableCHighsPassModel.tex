@@ -1,0 +1,47 @@
+\begin{table}[ht]
+\leftline{
+  \begin{tabular}{lp{13cm}}
+    \HighsInt \code{Highs\_passModel(}&    \VoidStar \HighsInstance,\\
+    &\Const \HighsInt \NumCol,    \Const \HighsInt \NumRow,\\
+    &\Const \HighsInt \NumNz,    \Const \HighsInt \HessianNumNz,\\
+    &\Const \HighsInt \Orientation,    \Const \HighsInt \Sense,\\
+    &\Const \Double \Offset,\\
+    &\Const \DoubleStar \ColCost,    \Const \DoubleStar \ColLower,\\
+    &\Const \DoubleStar \ColUpper,    \Const \DoubleStar \RowLower,\\
+    &\Const \DoubleStar \RowUpper,    \Const \HighsIntStar \Astart,\\
+    &\Const \HighsIntStar \Aindex,    \Const \DoubleStar \Avalue,\\
+    &\Const \HighsIntStar \Qstart,    \Const \HighsIntStar \Qindex,\\
+    &\Const \DoubleStar \Qvalue,\\
+    &\Const \HighsIntStar \Integrality    \code{);}
+  \end{tabular}}
+
+\leftline{
+  \begin{tabular}{lp{13cm}}
+    \HighsInt \code{Highs\_passLp(}&    \VoidStar \HighsInstance,\\
+    &\Const \HighsInt \NumCol,    \Const \HighsInt \NumRow,\\
+    &\Const \HighsInt \NumNz,\\
+    &\Const \HighsInt \Orientation,    \Const \HighsInt \Sense,\\
+    &\Const \Double \Offset,\\
+    &\Const \DoubleStar \ColCost,    \Const \DoubleStar \ColLower,\\
+    &\Const \DoubleStar \ColUpper,    \Const \DoubleStar \RowLower,\\
+    &\Const \DoubleStar \RowUpper,    \Const \HighsIntStar \Astart,\\
+    &\Const \HighsIntStar \Aindex,    \Const \DoubleStar \Avalue,
+    \code{);}
+  \end{tabular}}
+
+\leftline{
+  \begin{tabular}{lp{13cm}}
+    \HighsInt \code{Highs\_passMip(}&    \VoidStar \HighsInstance,\\
+    &\Const \HighsInt \NumCol,    \Const \HighsInt \NumRow,\\
+    &\Const \HighsInt \NumNz,\\
+    &\Const \HighsInt \Orientation,    \Const \HighsInt \Sense,\\
+    &\Const \Double \Offset,\\
+    &\Const \DoubleStar \ColCost,    \Const \DoubleStar \ColLower,\\
+    &\Const \DoubleStar \ColUpper,    \Const \DoubleStar \RowLower,\\
+    &\Const \DoubleStar \RowUpper,    \Const \HighsIntStar \Astart,\\
+    &\Const \HighsIntStar \Aindex,    \Const \DoubleStar \Avalue,\\
+    &\Const \HighsIntStar \Integrality    \code{);}
+  \end{tabular}}
+
+\caption{Passing data for a \HighsModel or \HighsLp to \Highs in \C}\label{tab:CHighsPassModel}
+\end{table}
