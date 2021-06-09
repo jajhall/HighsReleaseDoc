@@ -1,321 +1,4 @@
-\newcommand{\Rplus}{\protect\hspace{-.1em}\protect\raisebox{.35ex}{\smaller{\smaller\textbf{+}}}}
-\newcommand{\CMake}{\texttt{CMake}\xspace}
-\newcommand{\HiGHS}{\texttt{HiGHS}\xspace}
-\newcommand{\OpenMP}{\texttt{OpenMP}\xspace}
-\newcommand{\gpp}{\texttt{g++}\xspace}
-\newcommand{\icc}{\texttt{icc}\xspace}
-\newcommand{\HighsTextURL}{\texttt{http:/$\!$/www.HiGHS.dev/}\xspace}
-\newcommand{\HighsEmail}{\texttt{highsopt@gmail.com}\xspace}
-
-\newcommand{\C}{\mbox{C}\xspace}
-\newcommand{\Cpp}{\mbox{C\Rplus\Rplus}\xspace}
-\newcommand{\Csharp}{\mbox{C\#}\xspace}
-\newcommand{\Fortran}{\mbox{FORTRAN 90}\xspace}
-\newcommand{\Julia}{\mbox{Julia}\xspace}
-\newcommand{\Python}{\mbox{Python}\xspace}
-\newcommand{\Rust}{\mbox{Rust}\xspace}
-\newcommand{\Javascript}{\mbox{Javascript}\xspace}
-
-\def\code#1{\texttt{#1}}
-\def\file#1{\texttt{#1}}
-
-\newcommand{\EnumClass}{\code{enum class}\xspace}
-
-\newcommand{\Const}{\code{const}\xspace}
-\newcommand{\codeComma}{\code{,}\xspace}
-
-\newcommand{\Void}{\code{void}\xspace}
-\newcommand{\VoidStar}{\code{void*}\xspace}
-\newcommand{\HighsInt}{\code{integer}\xspace}
-\newcommand{\HighsIntStar}{\code{integer*}\xspace}
-\newcommand{\LongInt}{\code{int64\_t}\xspace}
-\newcommand{\Double}{\code{double}\xspace}
-\newcommand{\DoubleStar}{\code{double*}\xspace}
-\newcommand{\Char}{\code{char}\xspace}
-\newcommand{\CharStar}{\code{char*}\xspace}
-\newcommand{\Bool}{\code{bool}\xspace}
-\newcommand{\BoolStar}{\code{bool*}\xspace}
-\newcommand{\String}{\code{std::string}\xspace}
-\newcommand{\VectorDouble}{\code{std::vector<double>}\xspace}
-\newcommand{\VectorHighsInt}{\code{std::vector<integer>}\xspace}
-\newcommand{\VectorString}{\code{std::vector<std::string>}\xspace}
-%\newcommand{\Vector}{\code{std::vector<>}\xspace}
-\newcommand{\VectorHighsBasisStatus}{\code{std::vector<HighsBasisStatus>}\xspace}
-\newcommand{\VectorHighsVarType}{\code{std::vector<HighsVarType>}\xspace}
-\newcommand{\true}{\code{true}\xspace}
-
-%Header files
-\newcommand{\HighsH}{\code{Highs.h}\xspace}
-\newcommand{\CHighsH}{\code{interfaces/highs\_c\_api.h}\xspace}
-
-%Classes, structs and enums
-\newcommand{\Highs}{\code{Highs}\xspace}
-\newcommand{\HighsInstance}{\code{highs}\xspace}
-
-% HighsStatus
-\newcommand{\HighsStatus}{\code{HighsStatus}\xspace}
-\newcommand{\HighsStatusOk}{\code{HighsStatus::kOk}\xspace}
-\newcommand{\HighsStatusWarning}{\code{HighsStatus::kWarning}\xspace}
-\newcommand{\HighsStatusError}{\code{HighsStatus::kError}\xspace}
-
-\newcommand{\MatrixOrientation}{\code{MatrixOrientation}\xspace}
-\newcommand{\MatrixOrientationNone}{\code{MatrixOrientation::kNone}\xspace}
-\newcommand{\MatrixOrientationColwise}{\code{MatrixOrientation::kColwise}\xspace}
-\newcommand{\MatrixOrientationRowwise}{\code{MatrixOrientation::kRowwise}\xspace}
-
-\newcommand{\ObjSense}{\code{ObjSense}\xspace}
-\newcommand{\ObjSenseMinimize}{\code{ObjSense::kMinimize}\xspace}
-\newcommand{\ObjSenseMaximize}{\code{ObjSense::kMaximize}\xspace}
-
-\newcommand{\HighsVarType}{\code{HighsVarType}\xspace}
-\newcommand{\HighsVarTypeContinuous}{\code{HighsVarType::kContinuous}\xspace}
-\newcommand{\HighsVarTypeInteger}{\code{HighsVarType::kInteger}\xspace}
-\newcommand{\HighsVarTypeImplicitInteger}{\code{HighsVarType::kImplicitInteger}\xspace}
-
-
-% HighsModelStatus
-\newcommand{\HighsModelStatus}{\code{HighsModelStatus}\xspace}
-\newcommand{\HighsModelStatusReference}{\code{HighsModelStatus\&}\xspace}
-
-% HighsModel
-\newcommand{\HighsModel}{\code{HighsModel}\xspace}
-
-% HighsLp
-\newcommand{\HighsLp}{\code{HighsLp}\xspace}
-\newcommand{\NumCol}{\code{num\_col\_}\xspace}
-\newcommand{\NumRow}{\code{num\_row\_}\xspace}
-\newcommand{\Astart}{\code{a\_start\_}\xspace}
-\newcommand{\Aindex}{\code{a\_index\_}\xspace}
-\newcommand{\Avalue}{\code{a\_value\_}\xspace}
-\newcommand{\ColCost}{\code{col\_cost\_}\xspace}
-\newcommand{\ColLower}{\code{col\_lower\_}\xspace}
-\newcommand{\ColUpper}{\code{col\_upper\_}\xspace}
-\newcommand{\RowLower}{\code{row\_lower\_}\xspace}
-\newcommand{\RowUpper}{\code{row\_upper\_}\xspace}
-\newcommand{\Orientation}{\code{orientation\_}\xspace}
-\newcommand{\Sense}{\code{sense\_}\xspace}
-\newcommand{\Offset}{\code{offset\_}\xspace}
-\newcommand{\ModelName}{\code{model\_name\_}\xspace}
-\newcommand{\ColName}{\code{col\_name\_}\xspace}
-\newcommand{\RowName}{\code{row\_name\_}\xspace}
-\newcommand{\Integrality}{\code{integrality\_}\xspace}
-
-\newcommand{\NumNz}{\code{num\_nz\_}\xspace}
-\newcommand{\HessianNumNz}{\code{hessian\_num\_nz\_}\xspace}
-% HighsHessian
-\newcommand{\HighsHessian}{\code{HighsHessian}\xspace}
-\newcommand{\Qdim}{\code{dim\_}\xspace}
-\newcommand{\Qstart}{\code{q\_start\_}\xspace}
-\newcommand{\Qindex}{\code{q\_index\_}\xspace}
-\newcommand{\Qvalue}{\code{q\_value\_}\xspace}
-
-\newcommand{\NumColPone}{\code{num\_col\_+1}\xspace}
-\newcommand{\NumRowPone}{\code{num\_row\_+1}\xspace}
-\newcommand{\QdimPone}{\code{dim\_+1}\xspace}
-
-% HighsSolution
-\newcommand{\HighsSolution}{\code{HighsSolution}\xspace}
-\newcommand{\HighsSolutionReference}{\code{HighsSolution\&}\xspace}
-\newcommand{\HighsSolutionColValue}{\code{col\_value}\xspace}
-\newcommand{\HighsSolutionRowValue}{\code{row\_value}\xspace}
-\newcommand{\HighsSolutionColDual}{\code{col\_dual}\xspace}
-\newcommand{\HighsSolutionRowDual}{\code{row\_dual}\xspace}
-
-% HighsBasis
-\newcommand{\HighsBasis}{\code{HighsBasis}\xspace}
-\newcommand{\HighsBasisReference}{\code{HighsBasis\&}\xspace}
-\newcommand{\HighsBasisValid}{\code{valid}\xspace}
-\newcommand{\HighsBasisColStatus}{\code{col\_status}\xspace}
-\newcommand{\HighsBasisRowStatus}{\code{row\_status}\xspace}
-\newcommand{\HighsBasisStatus}{\code{HighsBasisStatus}\xspace}
-\newcommand{\HighsBasisStatusLower}{\code{HighsBasisStatus::kLower}\xspace}
-\newcommand{\HighsBasisStatusBasic}{\code{HighsBasisStatus::kBasic}\xspace}
-\newcommand{\HighsBasisStatusUpper}{\code{HighsBasisStatus::kUpper}\xspace}
-\newcommand{\HighsBasisStatusZero}{\code{HighsBasisStatus::kZero}\xspace}
-\newcommand{\HighsBasisStatusNonbasic}{\code{HighsBasisStatus::kNonbasic}\xspace}
-
-% HighsInfo
-\newcommand{\HighsInfo}{\code{HighsInfo}\xspace}
-\newcommand{\HighsInfoReference}{\code{HighsInfo\&}\xspace}
-\newcommand{\HighsInfoName}{\code{name}}
-\newcommand{\HighsInfoValue}{\code{value}}
-\newcommand{\HighsInfoValid}{\code{valid}\xspace}
-\newcommand{\HighsInfoMipNodeCount}{\code{mip\_node\_count}\xspace}
-\newcommand{\HighsInfoSimplexIterationCount}{\code{simplex\_iteration\_count}\xspace}
-\newcommand{\HighsInfoIpmIterationCount}{\code{ipm\_iteration\_count}\xspace}
-\newcommand{\HighsInfoCrossoverIterationCount}{\code{crossover\_iteration\_count}\xspace}
-\newcommand{\HighsInfoQpIterationCount}{\code{qp\_iteration\_count}\xspace}
-\newcommand{\HighsInfoPrimalSolutionStatus}{\code{primal\_solution\_status}\xspace}
-\newcommand{\HighsInfoDualSolutionStatus}{\code{dual\_solution\_status}\xspace}
-\newcommand{\HighsInfoBasisStatus}{\code{basis\_status}\xspace}
-\newcommand{\HighsInfoObjectiveFunctionValue}{\code{objective\_function\_value}\xspace}
-\newcommand{\HighsInfoMipDualBound}{\code{mip\_dual\_bound}\xspace}
-\newcommand{\HighsInfoMipGap}{\code{mip\_gap}\xspace}
-\newcommand{\HighsInfoNumPrimalInfeasibilities}{\code{num\_primal\_infeasibilities}\xspace}
-\newcommand{\HighsInfoMaxPrimalInfeasibility}{\code{max\_primal\_infeasibility}\xspace}
-\newcommand{\HighsInfoSumPrimalInfeasibilities}{\code{sum\_primal\_infeasibilities}\xspace}
-\newcommand{\HighsInfoNumDualInfeasibilities}{\code{num\_dual\_infeasibilities}\xspace}
-\newcommand{\HighsInfoMaxDualInfeasibility}{\code{max\_dual\_infeasibility}\xspace}
-\newcommand{\HighsInfoSumDualInfeasibilities}{\code{sum\_dual\_infeasibilities}\xspace}
-
-% HighsOptions
-\newcommand{\HighsOptions}{\code{HighsOptions}\xspace}
-\newcommand{\InfiniteCost}{\code{infinite\_cost}\xspace}
-\newcommand{\InfiniteBound}{\code{infinite\_bound}\xspace}
-\newcommand{\SmallMatrixValue}{\code{small\_matrix\_value}\xspace}
-\newcommand{\LargeMatrixValue}{\code{large\_matrix\_value}\xspace}
-\newcommand{\PrimalFeasibilityTolerance}{\code{primal\_feasibility\_tolerance}\xspace}
-\newcommand{\DualFeasibilityTolerance}{\code{dual\_feasibility\_tolerance}\xspace}
-\newcommand{\IpmOptimalityTolerance}{\code{ipm\_optimality\_tolerance}\xspace}
-\newcommand{\ObjectiveBound}{\code{objective\_bound}\xspace}
-\newcommand{\ObjectiveTarget}{\code{objective\_target}\xspace}
-\newcommand{\HighsRandomSeed}{\code{highs\_random\_seed}\xspace}
-\newcommand{\HighsDebugLevel}{\code{highs\_debug\_level}\xspace}
-\newcommand{\HighsAnalysisLevel}{\code{highs\_analysis\_level}\xspace}
-\newcommand{\SimplexStrategy}{\code{simplex\_strategy}\xspace}
-\newcommand{\SimplexScaleStrategy}{\code{simplex\_scale\_strategy}\xspace}
-\newcommand{\SimplexCrashStrategy}{\code{simplex\_crash\_strategy}\xspace}
-\newcommand{\SimplexDualEdgeWeightStrategy}{\code{simplex\_dual\_edge\_weight\_strategy}\xspace}
-\newcommand{\SimplexPrimalEdgeWeightStrategy}{\code{simplex\_primal\_edge\_weight\_strategy}\xspace}
-\newcommand{\SimplexIterationLimit}{\code{simplex\_iteration\_limit}\xspace}
-\newcommand{\SimplexUpdateLimit}{\code{simplex\_update\_limit}\xspace}
-\newcommand{\IpmIterationLimit}{\code{ipm\_iteration\_limit}\xspace}
-\newcommand{\HighsMinThreads}{\code{highs\_min\_threads}\xspace}
-\newcommand{\HighsMaxThreads}{\code{highs\_max\_threads}\xspace}
-\newcommand{\SolutionFile}{\code{solution\_file}\xspace}
-\newcommand{\LogFile}{\code{log\_file}\xspace}
-\newcommand{\WriteSolutionToFile}{\code{write\_solution\_to\_file}\xspace}
-\newcommand{\WriteSolutionPretty}{\code{write\_solution\_pretty}\xspace}
-\newcommand{\OutputFlag}{\code{output\_flag}\xspace}
-\newcommand{\LogToConsole}{\code{log\_to\_console}\xspace}
-\newcommand{\LogDevLevel}{\code{log\_dev\_level}\xspace}
-\newcommand{\RunCrossover}{\code{run\_crossover}\xspace}
-\newcommand{\AllowUnboundedOrInfeasible}{\code{allow\_unbounded\_or\_infeasible}\xspace}
-\newcommand{\UseImpliedBoundsFromPresolve}{\code{use\_implied\_bounds\_from\_presolve}\xspace}
-\newcommand{\MpsParserTypeFree}{\code{mps\_parser\_type\_free}\xspace}
-\newcommand{\KeepNRows}{\code{keep\_n\_rows}\xspace}
-\newcommand{\AllowedSimplexMatrixScaleFactor}{\code{allowed\_simplex\_matrix\_scale\_factor}\xspace}
-\newcommand{\AllowedSimplexCostScaleFactor}{\code{allowed\_simplex\_cost\_scale\_factor}\xspace}
-\newcommand{\SimplexDualiseStrategy}{\code{simplex\_dualise\_strategy}\xspace}
-\newcommand{\SimplexPermuteStrategy}{\code{simplex\_permute\_strategy}\xspace}
-\newcommand{\DualSimplexCleanup}{\code{dual\_simplex\_cleanup}\xspace}
-\newcommand{\SimplexPriceStrategy}{\code{simplex\_price\_strategy}\xspace}
-\newcommand{\PresolveSubstitutionMaxfillin}{\code{presolve\_substitution\_maxfillin}\xspace}
-\newcommand{\SimplexInitialConditionCheck}{\code{simplex\_initial\_condition\_check}\xspace}
-\newcommand{\SimplexInitialConditionTolerance}{\code{simplex\_initial\_condition\_tolerance}\xspace}
-\newcommand{\DualSteepestEdgeWeightLogErrorThreshold}{\code{dual\_steepest\_edge\_weight\_log\_error\_threshold}\xspace}
-\newcommand{\DualSimplexCostPerturbationMultiplier}{\code{dual\_simplex\_cost\_perturbation\_multiplier}\xspace}
-\newcommand{\PrimalSimplexBoundPerturbationMultiplier}{\code{primal\_simplex\_bound\_perturbation\_multiplier}\xspace}
-\newcommand{\PresolvePivotThreshold}{\code{presolve\_pivot\_threshold}\xspace}
-\newcommand{\FactorPivotThreshold}{\code{factor\_pivot\_threshold}\xspace}
-\newcommand{\FactorPivotTolerance}{\code{factor\_pivot\_tolerance}\xspace}
-\newcommand{\StartCrossoverTolerance}{\code{start\_crossover\_tolerance}\xspace}
-\newcommand{\LessInfeasibleDseCheck}{\code{less\_infeasible\_DSE\_check}\xspace}
-\newcommand{\LessInfeasibleDseChooseRow}{\code{less\_infeasible\_DSE\_choose\_row}\xspace}
-\newcommand{\UseOriginalHfactorLogic}{\code{use\_original\_HFactor\_logic}\xspace}
-\newcommand{\MipMaxNodes}{\code{mip\_max\_nodes}\xspace}
-\newcommand{\MipMaxStallNodes}{\code{mip\_max\_stall\_nodes}\xspace}
-\newcommand{\MipMaxLeaves}{\code{mip\_max\_leaves}\xspace}
-\newcommand{\MipLpAgeLimit}{\code{mip\_lp\_age\_limit}\xspace}
-\newcommand{\MipPoolAgeLimit}{\code{mip\_pool\_age\_limit}\xspace}
-\newcommand{\MipPoolSoftLimit}{\code{mip\_pool\_soft\_limit}\xspace}
-\newcommand{\MipPscostMinreliable}{\code{mip\_pscost\_minreliable}\xspace}
-\newcommand{\MipReportLevel}{\code{mip\_report\_level}\xspace}
-\newcommand{\MipFeasibilityTolerance}{\code{mip\_feasibility\_tolerance}\xspace}
-\newcommand{\MipEpsilon}{\code{mip\_epsilon}\xspace}
-\newcommand{\MipHeuristicEffort}{\code{mip\_heuristic\_effort}\xspace}
-
-%Highs class methods
-\newcommand{\HighsPassModelGeneric}{\code{passModel}\xspace}
-\newcommand{\HighsPassModelModelDef}{\code{HighsStatus passModel(HighsModel model);}\xspace}
-\newcommand{\HighsPassModelLpDef}{\code{HighsStatus passModel(HighsLp lp);}\xspace}
-
-\newcommand{\HighsRun}{\code{run()}\xspace}
-\newcommand{\HighsRunDef}{\code{\HighsStatus \HighsRun;}\xspace}
-\newcommand{\HighsGetModelStatus}{\code{getModelStatus}\xspace}
-\newcommand{\HighsGetModelStatusDef}{\code{\Const \HighsModelStatusReference getModelStatus(const bool scaled\_model = false) const;}\xspace}
-\newcommand{\HighsGetInfo}{\code{getInfo()}\xspace}
-\newcommand{\HighsGetInfoDef}{\code{\Const \HighsInfoReference \HighsGetInfo\Const;}\xspace}
-\newcommand{\HighsGetSolution}{\code{getSolution()}\xspace}
-\newcommand{\HighsGetSolutionDef}{\code{\Const \HighsSolutionReference \HighsGetSolution\Const;}\xspace}
-\newcommand{\HighsGetBasis}{\code{getBasis()}\xspace}
-\newcommand{\HighsGetBasisDef}{\code{\Const \HighsBasisReference \HighsGetBasis\Const;}\xspace}
-
-\newcommand{\HighsAddRow}{\code{addRow}\xspace}
-\newcommand{\HighsAddRows}{\code{addRows}\xspace}
-\newcommand{\HighsAddCol}{\code{addCol}\xspace}
-\newcommand{\HighsAddCols}{\code{addCols}\xspace}
-\newcommand{\HighsChangeObjectiveSense}{\code{changeObjectiveSense}\xspace}
-\newcommand{\HighsChangeColIntegrality}{\code{changeColIntegrality}\xspace}
-\newcommand{\HighsChangeColsIntegrality}{\code{changeColsIntegrality}\xspace}
-\newcommand{\HighsChangeColCost}{\code{changeColCost}\xspace}
-\newcommand{\HighsChangeColsCost}{\code{changeColsCost}\xspace}
-\newcommand{\HighsChangeColBounds}{\code{changeColBounds}\xspace}
-\newcommand{\HighsChangeColsBounds}{\code{changeColsBounds}\xspace}
-\newcommand{\HighsChangeRowBounds}{\code{changeRowBounds}\xspace}
-\newcommand{\HighsChangeRowsBounds}{\code{changeRowsBounds}\xspace}
-\newcommand{\HighsChangeCoeff}{\code{changeCoeff}\xspace}
-\newcommand{\HighsGetObjectiveSense}{\code{getObjectiveSense}\xspace}
-\newcommand{\HighsGetCols}{\code{getCols}\xspace}
-\newcommand{\HighsGetRows}{\code{getRows}\xspace}
-\newcommand{\HighsGetCoeff}{\code{getCoeff}\xspace}
-\newcommand{\HighsDeleteCols}{\code{deleteCols}\xspace}
-\newcommand{\HighsDeleteRows}{\code{deleteRows}\xspace}
-\newcommand{\HighsScaleCol}{\code{scaleCol}\xspace}
-\newcommand{\HighsScaleRow}{\code{scaleRow}\xspace}
-
-%Highs C API methods
-\newcommand{\CHighsCreate}{\code{Highs\_create(void)}\xspace}
-\newcommand{\CHighsCreateDef}{\VoidStar \CHighsCreate;\xspace}
-\newcommand{\CHighsDestroy}{\code{Highs\_destroy(void* highs)}\xspace}
-\newcommand{\CHighsDestroyDef}{\Void \CHighsDestroy;\xspace}
-
-\newcommand{\CHighsRun}{\code{Highs\_run(void* highs)}\xspace}
-\newcommand{\CHighsRunDef}{\HighsInt \CHighsRun;\xspace}
-
-\newcommand{\CHighsGetModelStatus}{\code{Highs\_getModelStatus(void* highs)}\xspace}
-\newcommand{\CHighsGetScaledModelStatus}{\code{Highs\_getScaledModelStatus(void* highs)}\xspace}
-
-\newcommand{\CHighsAddRow}{\code{Highs\_addRow}\xspace}
-\newcommand{\CHighsAddRows}{\code{Highs\_addRows}\xspace}
-\newcommand{\CHighsAddCol}{\code{Highs\_addCol}\xspace}
-\newcommand{\CHighsAddCols}{\code{Highs\_addCols}\xspace}
-\newcommand{\CHighsChangeObjectiveSense}{\code{Highs\_changeObjectiveSense}\xspace}
-\newcommand{\CHighsChangeColIntegrality}{\code{Highs\_changeColIntegrality}\xspace}
-\newcommand{\CHighsChangeColsIntegralityByRange}{\code{Highs\_changeColsIntegralityByRange}\xspace}
-\newcommand{\CHighsChangeColsIntegralityBySet}{\code{Highs\_changeColsIntegralityBySet}\xspace}
-\newcommand{\CHighsChangeColsIntegralityByMask}{\code{Highs\_changeColsIntegralityByMask}\xspace}
-\newcommand{\CHighsChangeColCost}{\code{Highs\_changeColCost}\xspace}
-\newcommand{\CHighsChangeColsCostByRange}{\code{Highs\_changeColsCostByRange}\xspace}
-\newcommand{\CHighsChangeColsCostBySet}{\code{Highs\_changeColsCostBySet}\xspace}
-\newcommand{\CHighsChangeColsCostByMask}{\code{Highs\_changeColsCostByMask}\xspace}
-\newcommand{\CHighsChangeColBounds}{\code{Highs\_changeColBounds}\xspace}
-\newcommand{\CHighsChangeColsBoundsByRange}{\code{Highs\_changeColsBoundsByRange}\xspace}
-\newcommand{\CHighsChangeColsBoundsBySet}{\code{Highs\_changeColsBoundsBySet}\xspace}
-\newcommand{\CHighsChangeColsBoundsByMask}{\code{Highs\_changeColsBoundsByMask}\xspace}
-\newcommand{\CHighsChangeRowBounds}{\code{Highs\_changeRowBounds}\xspace}
-\newcommand{\CHighsChangeRowsBoundsByRange}{\code{Highs\_changeRowsBoundsByRange}\xspace}
-\newcommand{\CHighsChangeRowsBoundsBySet}{\code{Highs\_changeRowsBoundsBySet}\xspace}
-\newcommand{\CHighsChangeRowsBoundsByMask}{\code{Highs\_changeRowsBoundsByMask}\xspace}
-\newcommand{\CHighsChangeCoeff}{\code{Highs\_changeCoeff}\xspace}
-\newcommand{\CHighsGetObjectiveSense}{\code{Highs\_getObjectiveSense}\xspace}
-\newcommand{\CHighsGetColsByRange}{\code{Highs\_getColsByRange}\xspace}
-\newcommand{\CHighsGetColsBySet}{\code{Highs\_getColsBySet}\xspace}
-\newcommand{\CHighsGetColsByMask}{\code{Highs\_getColsByMask}\xspace}
-\newcommand{\CHighsGetRowsByRange}{\code{Highs\_getRowsByRange}\xspace}
-\newcommand{\CHighsGetRowsBySet}{\code{Highs\_getRowsBySet}\xspace}
-\newcommand{\CHighsGetRowsByMask}{\code{Highs\_getRowsByMask}\xspace}
-\newcommand{\CHighsGetCoeff}{\code{Highs\_getCoeff}\xspace}
-\newcommand{\CHighsDeleteColsByRange}{\code{Highs\_deleteColsByRange}\xspace}
-\newcommand{\CHighsDeleteColsBySet}{\code{Highs\_deleteColsBySet}\xspace}
-\newcommand{\CHighsDeleteColsByMask}{\code{Highs\_deleteColsByMask}\xspace}
-\newcommand{\CHighsDeleteRowsByRange}{\code{Highs\_deleteRowsByRange}\xspace}
-\newcommand{\CHighsDeleteRowsBySet}{\code{Highs\_deleteRowsBySet}\xspace}
-\newcommand{\CHighsDeleteRowsByMask}{\code{Highs\_deleteRowsByMask}\xspace}
-\newcommand{\CHighsScaleCol}{\code{Highs\_scaleCol}\xspace}
-\newcommand{\CHighsScaleRow}{\code{Highs\_scaleRow}\xspace}
-
-
+% Maths
 \def\bfb{\mbox{\boldmath$b$}}
 \def\bfc{\mbox{\boldmath$c$}}
 \def\bfl{\mbox{\boldmath$l$}}
@@ -338,3 +21,320 @@
 \newcommand{\inyellow}[1]{{\color{yellow} #1}}
 \newcommand{\incyan}[1]{{\color{cyan} #1}}
 \newcommand{\inblack}[1]{{\color{black} {#1}}}
+
+% Code for running text
+\newcommand{\Rplus}{\protect\hspace{-.1em}\protect\raisebox{.35ex}{\smaller{\smaller\textbf{+}}}}
+\newcommand{\CMake}{\texttt{CMake}\xspace}
+\newcommand{\HiGHS}{\texttt{HiGHS}\xspace}
+\newcommand{\OpenMP}{\texttt{OpenMP}\xspace}
+\newcommand{\gpp}{\texttt{g++}\xspace}
+\newcommand{\icc}{\texttt{icc}\xspace}
+\newcommand{\HighsTextURL}{\texttt{http:/$\!$/www.HiGHS.dev/}\xspace}
+\newcommand{\HighsEmail}{\texttt{highsopt@gmail.com}\xspace}
+
+\newcommand{\C}{\mbox{C}\xspace}
+\newcommand{\Cpp}{\mbox{C\Rplus\Rplus}\xspace}
+\newcommand{\Csharp}{\mbox{C\#}\xspace}
+\newcommand{\Fortran}{\mbox{FORTRAN 90}\xspace}
+\newcommand{\Julia}{\mbox{Julia}\xspace}
+\newcommand{\Python}{\mbox{Python}\xspace}
+\newcommand{\Rust}{\mbox{Rust}\xspace}
+\newcommand{\Javascript}{\mbox{Javascript}\xspace}
+
+\def\code#1{\texttt{#1}}
+\def\file#1{\texttt{#1}}
+
+\newcommand{\EnumClass}{\code{enum class}}
+
+\newcommand{\Const}{\code{const}}
+\newcommand{\codeComma}{\code{,}}
+
+\newcommand{\Void}{\code{void}}
+\newcommand{\VoidStar}{\code{void*}}
+\newcommand{\HighsInt}{\code{integer}}
+\newcommand{\HighsIntStar}{\code{integer*}}
+\newcommand{\LongInt}{\code{int64\_t}}
+\newcommand{\Double}{\code{double}}
+\newcommand{\DoubleStar}{\code{double*}}
+\newcommand{\Char}{\code{char}}
+\newcommand{\CharStar}{\code{char*}}
+\newcommand{\Bool}{\code{bool}}
+\newcommand{\BoolStar}{\code{bool*}}
+\newcommand{\String}{\code{std::string}}
+\newcommand{\VectorDouble}{\code{std::vector<double>}}
+\newcommand{\VectorHighsInt}{\code{std::vector<integer>}}
+\newcommand{\VectorString}{\code{std::vector<std::string>}}
+\newcommand{\VectorHighsBasisStatus}{\code{std::vector<HighsBasisStatus>}}
+\newcommand{\VectorHighsVarType}{\code{std::vector<HighsVarType>}}
+\newcommand{\true}{\code{true}}
+
+%Header files
+\newcommand{\HighsH}{\code{Highs.h}}
+\newcommand{\CHighsH}{\code{interfaces/highs\_c\_api.h}}
+
+%Classes, structs and enums
+\newcommand{\Highs}{\code{Highs}}
+\newcommand{\HighsInstance}{\code{highs}}
+
+% HighsStatus
+\newcommand{\HighsStatus}{\code{HighsStatus}}
+\newcommand{\HighsStatusOk}{\code{HighsStatus::kOk}}
+\newcommand{\HighsStatusWarning}{\code{HighsStatus::kWarning}}
+\newcommand{\HighsStatusError}{\code{HighsStatus::kError}}
+
+\newcommand{\MatrixOrientation}{\code{MatrixOrientation}}
+\newcommand{\MatrixOrientationNone}{\code{MatrixOrientation::kNone}}
+\newcommand{\MatrixOrientationColwise}{\code{MatrixOrientation::kColwise}}
+\newcommand{\MatrixOrientationRowwise}{\code{MatrixOrientation::kRowwise}}
+
+\newcommand{\ObjSense}{\code{ObjSense}}
+\newcommand{\ObjSenseMinimize}{\code{ObjSense::kMinimize}}
+\newcommand{\ObjSenseMaximize}{\code{ObjSense::kMaximize}}
+
+\newcommand{\HighsVarType}{\code{HighsVarType}}
+\newcommand{\HighsVarTypeContinuous}{\code{HighsVarType::kContinuous}}
+\newcommand{\HighsVarTypeInteger}{\code{HighsVarType::kInteger}}
+\newcommand{\HighsVarTypeImplicitInteger}{\code{HighsVarType::kImplicitInteger}}
+
+
+% HighsModelStatus
+\newcommand{\HighsModelStatus}{\code{HighsModelStatus}}
+\newcommand{\HighsModelStatusReference}{\code{HighsModelStatus\&}}
+
+% HighsModel
+\newcommand{\HighsModel}{\code{HighsModel}}
+
+% HighsLp
+\newcommand{\HighsLp}{\code{HighsLp}}
+\newcommand{\NumCol}{\code{num\_col\_}}
+\newcommand{\NumRow}{\code{num\_row\_}}
+\newcommand{\Astart}{\code{a\_start\_}}
+\newcommand{\Aindex}{\code{a\_index\_}}
+\newcommand{\Avalue}{\code{a\_value\_}}
+\newcommand{\ColCost}{\code{col\_cost\_}}
+\newcommand{\ColLower}{\code{col\_lower\_}}
+\newcommand{\ColUpper}{\code{col\_upper\_}}
+\newcommand{\RowLower}{\code{row\_lower\_}}
+\newcommand{\RowUpper}{\code{row\_upper\_}}
+\newcommand{\Orientation}{\code{orientation\_}}
+\newcommand{\Sense}{\code{sense\_}}
+\newcommand{\Offset}{\code{offset\_}}
+\newcommand{\ModelName}{\code{model\_name\_}}
+\newcommand{\ColName}{\code{col\_name\_}}
+\newcommand{\RowName}{\code{row\_name\_}}
+\newcommand{\Integrality}{\code{integrality\_}}
+
+\newcommand{\NumNz}{\code{num\_nz\_}}
+\newcommand{\HessianNumNz}{\code{hessian\_num\_nz\_}}
+% HighsHessian
+\newcommand{\HighsHessian}{\code{HighsHessian}}
+\newcommand{\Qdim}{\code{dim\_}}
+\newcommand{\Qstart}{\code{q\_start\_}}
+\newcommand{\Qindex}{\code{q\_index\_}}
+\newcommand{\Qvalue}{\code{q\_value\_}}
+
+\newcommand{\NumColPone}{\code{num\_col\_+1}}
+\newcommand{\NumRowPone}{\code{num\_row\_+1}}
+\newcommand{\QdimPone}{\code{dim\_+1}}
+
+% HighsSolution
+\newcommand{\HighsSolution}{\code{HighsSolution}}
+\newcommand{\HighsSolutionReference}{\code{HighsSolution\&}}
+\newcommand{\HighsSolutionColValue}{\code{col\_value}}
+\newcommand{\HighsSolutionRowValue}{\code{row\_value}}
+\newcommand{\HighsSolutionColDual}{\code{col\_dual}}
+\newcommand{\HighsSolutionRowDual}{\code{row\_dual}}
+
+% HighsBasis
+\newcommand{\HighsBasis}{\code{HighsBasis}}
+\newcommand{\HighsBasisReference}{\code{HighsBasis\&}}
+\newcommand{\HighsBasisValid}{\code{valid}}
+\newcommand{\HighsBasisColStatus}{\code{col\_status}}
+\newcommand{\HighsBasisRowStatus}{\code{row\_status}}
+\newcommand{\HighsBasisStatus}{\code{HighsBasisStatus}}
+\newcommand{\HighsBasisStatusLower}{\code{HighsBasisStatus::kLower}}
+\newcommand{\HighsBasisStatusBasic}{\code{HighsBasisStatus::kBasic}}
+\newcommand{\HighsBasisStatusUpper}{\code{HighsBasisStatus::kUpper}}
+\newcommand{\HighsBasisStatusZero}{\code{HighsBasisStatus::kZero}}
+\newcommand{\HighsBasisStatusNonbasic}{\code{HighsBasisStatus::kNonbasic}}
+
+% HighsInfo
+\newcommand{\HighsInfo}{\code{HighsInfo}}
+\newcommand{\HighsInfoReference}{\code{HighsInfo\&}}
+\newcommand{\HighsInfoName}{\code{name}}
+\newcommand{\HighsInfoValue}{\code{value}}
+\newcommand{\HighsInfoValid}{\code{valid}}
+\newcommand{\HighsInfoMipNodeCount}{\code{mip\_node\_count}}
+\newcommand{\HighsInfoSimplexIterationCount}{\code{simplex\_iteration\_count}}
+\newcommand{\HighsInfoIpmIterationCount}{\code{ipm\_iteration\_count}}
+\newcommand{\HighsInfoCrossoverIterationCount}{\code{crossover\_iteration\_count}}
+\newcommand{\HighsInfoQpIterationCount}{\code{qp\_iteration\_count}}
+\newcommand{\HighsInfoPrimalSolutionStatus}{\code{primal\_solution\_status}}
+\newcommand{\HighsInfoDualSolutionStatus}{\code{dual\_solution\_status}}
+\newcommand{\HighsInfoBasisStatus}{\code{basis\_status}}
+\newcommand{\HighsInfoObjectiveFunctionValue}{\code{objective\_function\_value}}
+\newcommand{\HighsInfoMipDualBound}{\code{mip\_dual\_bound}}
+\newcommand{\HighsInfoMipGap}{\code{mip\_gap}}
+\newcommand{\HighsInfoNumPrimalInfeasibilities}{\code{num\_primal\_infeasibilities}}
+\newcommand{\HighsInfoMaxPrimalInfeasibility}{\code{max\_primal\_infeasibility}}
+\newcommand{\HighsInfoSumPrimalInfeasibilities}{\code{sum\_primal\_infeasibilities}}
+\newcommand{\HighsInfoNumDualInfeasibilities}{\code{num\_dual\_infeasibilities}}
+\newcommand{\HighsInfoMaxDualInfeasibility}{\code{max\_dual\_infeasibility}}
+\newcommand{\HighsInfoSumDualInfeasibilities}{\code{sum\_dual\_infeasibilities}}
+
+% HighsOptions
+\newcommand{\HighsOptions}{\code{HighsOptions}}
+\newcommand{\InfiniteCost}{\code{infinite\_cost}}
+\newcommand{\InfiniteBound}{\code{infinite\_bound}}
+\newcommand{\SmallMatrixValue}{\code{small\_matrix\_value}}
+\newcommand{\LargeMatrixValue}{\code{large\_matrix\_value}}
+\newcommand{\PrimalFeasibilityTolerance}{\code{primal\_feasibility\_tolerance}}
+\newcommand{\DualFeasibilityTolerance}{\code{dual\_feasibility\_tolerance}}
+\newcommand{\IpmOptimalityTolerance}{\code{ipm\_optimality\_tolerance}}
+\newcommand{\ObjectiveBound}{\code{objective\_bound}}
+\newcommand{\ObjectiveTarget}{\code{objective\_target}}
+\newcommand{\HighsRandomSeed}{\code{highs\_random\_seed}}
+\newcommand{\HighsDebugLevel}{\code{highs\_debug\_level}}
+\newcommand{\HighsAnalysisLevel}{\code{highs\_analysis\_level}}
+\newcommand{\SimplexStrategy}{\code{simplex\_strategy}}
+\newcommand{\SimplexScaleStrategy}{\code{simplex\_scale\_strategy}}
+\newcommand{\SimplexCrashStrategy}{\code{simplex\_crash\_strategy}}
+\newcommand{\SimplexDualEdgeWeightStrategy}{\code{simplex\_dual\_edge\_weight\_strategy}}
+\newcommand{\SimplexPrimalEdgeWeightStrategy}{\code{simplex\_primal\_edge\_weight\_strategy}}
+\newcommand{\SimplexIterationLimit}{\code{simplex\_iteration\_limit}}
+\newcommand{\SimplexUpdateLimit}{\code{simplex\_update\_limit}}
+\newcommand{\IpmIterationLimit}{\code{ipm\_iteration\_limit}}
+\newcommand{\HighsMinThreads}{\code{highs\_min\_threads}}
+\newcommand{\HighsMaxThreads}{\code{highs\_max\_threads}}
+\newcommand{\SolutionFile}{\code{solution\_file}}
+\newcommand{\LogFile}{\code{log\_file}}
+\newcommand{\WriteSolutionToFile}{\code{write\_solution\_to\_file}}
+\newcommand{\WriteSolutionPretty}{\code{write\_solution\_pretty}}
+\newcommand{\OutputFlag}{\code{output\_flag}}
+\newcommand{\LogToConsole}{\code{log\_to\_console}}
+\newcommand{\LogDevLevel}{\code{log\_dev\_level}}
+\newcommand{\RunCrossover}{\code{run\_crossover}}
+\newcommand{\AllowUnboundedOrInfeasible}{\code{allow\_unbounded\_or\_infeasible}}
+\newcommand{\UseImpliedBoundsFromPresolve}{\code{use\_implied\_bounds\_from\_presolve}}
+\newcommand{\MpsParserTypeFree}{\code{mps\_parser\_type\_free}}
+\newcommand{\KeepNRows}{\code{keep\_n\_rows}}
+\newcommand{\AllowedSimplexMatrixScaleFactor}{\code{allowed\_simplex\_matrix\_scale\_factor}}
+\newcommand{\AllowedSimplexCostScaleFactor}{\code{allowed\_simplex\_cost\_scale\_factor}}
+\newcommand{\SimplexDualiseStrategy}{\code{simplex\_dualise\_strategy}}
+\newcommand{\SimplexPermuteStrategy}{\code{simplex\_permute\_strategy}}
+\newcommand{\DualSimplexCleanup}{\code{dual\_simplex\_cleanup}}
+\newcommand{\SimplexPriceStrategy}{\code{simplex\_price\_strategy}}
+\newcommand{\PresolveSubstitutionMaxfillin}{\code{presolve\_substitution\_maxfillin}}
+\newcommand{\SimplexInitialConditionCheck}{\code{simplex\_initial\_condition\_check}}
+\newcommand{\SimplexInitialConditionTolerance}{\code{simplex\_initial\_condition\_tolerance}}
+\newcommand{\DualSteepestEdgeWeightLogErrorThreshold}{\code{dual\_steepest\_edge\_weight\_log\_error\_threshold}}
+\newcommand{\DualSimplexCostPerturbationMultiplier}{\code{dual\_simplex\_cost\_perturbation\_multiplier}}
+\newcommand{\PrimalSimplexBoundPerturbationMultiplier}{\code{primal\_simplex\_bound\_perturbation\_multiplier}}
+\newcommand{\PresolvePivotThreshold}{\code{presolve\_pivot\_threshold}}
+\newcommand{\FactorPivotThreshold}{\code{factor\_pivot\_threshold}}
+\newcommand{\FactorPivotTolerance}{\code{factor\_pivot\_tolerance}}
+\newcommand{\StartCrossoverTolerance}{\code{start\_crossover\_tolerance}}
+\newcommand{\LessInfeasibleDseCheck}{\code{less\_infeasible\_DSE\_check}}
+\newcommand{\LessInfeasibleDseChooseRow}{\code{less\_infeasible\_DSE\_choose\_row}}
+\newcommand{\UseOriginalHfactorLogic}{\code{use\_original\_HFactor\_logic}}
+\newcommand{\MipMaxNodes}{\code{mip\_max\_nodes}}
+\newcommand{\MipMaxStallNodes}{\code{mip\_max\_stall\_nodes}}
+\newcommand{\MipMaxLeaves}{\code{mip\_max\_leaves}}
+\newcommand{\MipLpAgeLimit}{\code{mip\_lp\_age\_limit}}
+\newcommand{\MipPoolAgeLimit}{\code{mip\_pool\_age\_limit}}
+\newcommand{\MipPoolSoftLimit}{\code{mip\_pool\_soft\_limit}}
+\newcommand{\MipPscostMinreliable}{\code{mip\_pscost\_minreliable}}
+\newcommand{\MipReportLevel}{\code{mip\_report\_level}}
+\newcommand{\MipFeasibilityTolerance}{\code{mip\_feasibility\_tolerance}}
+\newcommand{\MipEpsilon}{\code{mip\_epsilon}}
+\newcommand{\MipHeuristicEffort}{\code{mip\_heuristic\_effort}}
+
+%Highs class methods
+\newcommand{\HighsPassModelGeneric}{\code{passModel}}
+\newcommand{\HighsPassModelModelDef}{\code{HighsStatus passModel(HighsModel model);}}
+\newcommand{\HighsPassModelLpDef}{\code{HighsStatus passModel(HighsLp lp);}}
+
+\newcommand{\HighsRun}{\code{run()}}
+\newcommand{\HighsRunDef}{\code{\HighsStatus{} \HighsRun;}}
+\newcommand{\HighsGetModelStatus}{\code{getModelStatus}}
+\newcommand{\HighsGetModelStatusDef}{\code{\Const \HighsModelStatusReference getModelStatus(const bool scaled\_model = false) const;}}
+\newcommand{\HighsGetInfo}{\code{getInfo()}}
+\newcommand{\HighsGetInfoDef}{\code{\Const \HighsInfoReference \HighsGetInfo \Const;}}
+\newcommand{\HighsGetSolution}{\code{getSolution()}}
+\newcommand{\HighsGetSolutionDef}{\code{\Const \HighsSolutionReference \HighsGetSolution \Const;}}
+\newcommand{\HighsGetBasis}{\code{getBasis()}}
+\newcommand{\HighsGetBasisDef}{\code{\Const \HighsBasisReference \HighsGetBasis \Const;}}
+
+\newcommand{\HighsAddRow}{\code{addRow}}
+\newcommand{\HighsAddRows}{\code{addRows}}
+\newcommand{\HighsAddCol}{\code{addCol}}
+\newcommand{\HighsAddCols}{\code{addCols}}
+\newcommand{\HighsChangeObjectiveSense}{\code{changeObjectiveSense}}
+\newcommand{\HighsChangeColIntegrality}{\code{changeColIntegrality}}
+\newcommand{\HighsChangeColsIntegrality}{\code{changeColsIntegrality}}
+\newcommand{\HighsChangeColCost}{\code{changeColCost}}
+\newcommand{\HighsChangeColsCost}{\code{changeColsCost}}
+\newcommand{\HighsChangeColBounds}{\code{changeColBounds}}
+\newcommand{\HighsChangeColsBounds}{\code{changeColsBounds}}
+\newcommand{\HighsChangeRowBounds}{\code{changeRowBounds}}
+\newcommand{\HighsChangeRowsBounds}{\code{changeRowsBounds}}
+\newcommand{\HighsChangeCoeff}{\code{changeCoeff}}
+\newcommand{\HighsGetObjectiveSense}{\code{getObjectiveSense}}
+\newcommand{\HighsGetCols}{\code{getCols}}
+\newcommand{\HighsGetRows}{\code{getRows}}
+\newcommand{\HighsGetCoeff}{\code{getCoeff}}
+\newcommand{\HighsDeleteCols}{\code{deleteCols}}
+\newcommand{\HighsDeleteRows}{\code{deleteRows}}
+\newcommand{\HighsScaleCol}{\code{scaleCol}}
+\newcommand{\HighsScaleRow}{\code{scaleRow}}
+
+%Highs C API methods
+\newcommand{\CHighsCreate}{\code{Highs\_create(void)}}
+\newcommand{\CHighsCreateDef}{\VoidStar \CHighsCreate;}
+\newcommand{\CHighsDestroy}{\code{Highs\_destroy(void* highs)}}
+\newcommand{\CHighsDestroyDef}{\Void \CHighsDestroy;}
+
+\newcommand{\CHighsRun}{\code{Highs\_run(void* highs)}}
+\newcommand{\CHighsRunDef}{\HighsInt \CHighsRun;}
+
+\newcommand{\CHighsGetModelStatus}{\code{Highs\_getModelStatus(void* highs)}}
+\newcommand{\CHighsGetScaledModelStatus}{\code{Highs\_getScaledModelStatus(void* highs)}}
+
+\newcommand{\CHighsAddRow}{\code{Highs\_addRow}}
+\newcommand{\CHighsAddRows}{\code{Highs\_addRows}}
+\newcommand{\CHighsAddCol}{\code{Highs\_addCol}}
+\newcommand{\CHighsAddCols}{\code{Highs\_addCols}}
+\newcommand{\CHighsChangeObjectiveSense}{\code{Highs\_changeObjectiveSense}}
+\newcommand{\CHighsChangeColIntegrality}{\code{Highs\_changeColIntegrality}}
+\newcommand{\CHighsChangeColsIntegralityByRange}{\code{Highs\_changeColsIntegralityByRange}}
+\newcommand{\CHighsChangeColsIntegralityBySet}{\code{Highs\_changeColsIntegralityBySet}}
+\newcommand{\CHighsChangeColsIntegralityByMask}{\code{Highs\_changeColsIntegralityByMask}}
+\newcommand{\CHighsChangeColCost}{\code{Highs\_changeColCost}}
+\newcommand{\CHighsChangeColsCostByRange}{\code{Highs\_changeColsCostByRange}}
+\newcommand{\CHighsChangeColsCostBySet}{\code{Highs\_changeColsCostBySet}}
+\newcommand{\CHighsChangeColsCostByMask}{\code{Highs\_changeColsCostByMask}}
+\newcommand{\CHighsChangeColBounds}{\code{Highs\_changeColBounds}}
+\newcommand{\CHighsChangeColsBoundsByRange}{\code{Highs\_changeColsBoundsByRange}}
+\newcommand{\CHighsChangeColsBoundsBySet}{\code{Highs\_changeColsBoundsBySet}}
+\newcommand{\CHighsChangeColsBoundsByMask}{\code{Highs\_changeColsBoundsByMask}}
+\newcommand{\CHighsChangeRowBounds}{\code{Highs\_changeRowBounds}}
+\newcommand{\CHighsChangeRowsBoundsByRange}{\code{Highs\_changeRowsBoundsByRange}}
+\newcommand{\CHighsChangeRowsBoundsBySet}{\code{Highs\_changeRowsBoundsBySet}}
+\newcommand{\CHighsChangeRowsBoundsByMask}{\code{Highs\_changeRowsBoundsByMask}}
+\newcommand{\CHighsChangeCoeff}{\code{Highs\_changeCoeff}}
+\newcommand{\CHighsGetObjectiveSense}{\code{Highs\_getObjectiveSense}}
+\newcommand{\CHighsGetColsByRange}{\code{Highs\_getColsByRange}}
+\newcommand{\CHighsGetColsBySet}{\code{Highs\_getColsBySet}}
+\newcommand{\CHighsGetColsByMask}{\code{Highs\_getColsByMask}}
+\newcommand{\CHighsGetRowsByRange}{\code{Highs\_getRowsByRange}}
+\newcommand{\CHighsGetRowsBySet}{\code{Highs\_getRowsBySet}}
+\newcommand{\CHighsGetRowsByMask}{\code{Highs\_getRowsByMask}}
+\newcommand{\CHighsGetCoeff}{\code{Highs\_getCoeff}}
+\newcommand{\CHighsDeleteColsByRange}{\code{Highs\_deleteColsByRange}}
+\newcommand{\CHighsDeleteColsBySet}{\code{Highs\_deleteColsBySet}}
+\newcommand{\CHighsDeleteColsByMask}{\code{Highs\_deleteColsByMask}}
+\newcommand{\CHighsDeleteRowsByRange}{\code{Highs\_deleteRowsByRange}}
+\newcommand{\CHighsDeleteRowsBySet}{\code{Highs\_deleteRowsBySet}}
+\newcommand{\CHighsDeleteRowsByMask}{\code{Highs\_deleteRowsByMask}}
+\newcommand{\CHighsScaleCol}{\code{Highs\_scaleCol}}
+\newcommand{\CHighsScaleRow}{\code{Highs\_scaleRow}}
