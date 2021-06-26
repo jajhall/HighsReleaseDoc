@@ -4,9 +4,9 @@
   \begin{tabular}{lp{13cm}}
     \HighsInt{} \code{Highs\_passModel(}&    \VoidStarHighsInstance\codeComma\\
     &\Const{} \HighsInt{} \NumCol\codeComma    \Const{} \HighsInt{} \NumRow\codeComma\\
-    &\Const{} \HighsInt{} \NumNz\codeComma    \Const{} \HighsInt{} \HessianNumNz\codeComma\\
-    &\Const{} \HighsInt{} \Orientation\codeComma    \Const{} \HighsInt{} \Sense\codeComma\\
-    &\Const{} \Double{} \Offset\codeComma\\
+    &\Const{} \HighsInt{} \NumNz\codeComma    \Const{} \HighsInt{} \QnumNz\codeComma\\
+    &\Const{} \HighsInt{} \Aformat\codeComma    \Const{} \HighsInt{} \Qformat\codeComma\\
+    &\Const{} \HighsInt{} \Sense\codeComma \Const{} \Double{} \Offset\codeComma\\
     &\Const{} \DoubleStar{} \ColCost\codeComma    \Const{} \DoubleStar{} \ColLower\codeComma\\
     &\Const{} \DoubleStar{} \ColUpper\codeComma    \Const{} \DoubleStar{} \RowLower\codeComma\\
     &\Const{} \DoubleStar{} \RowUpper\codeComma    \Const{} \HighsIntStar{} \Astart\codeComma\\
@@ -23,8 +23,8 @@
     \HighsInt{} \code{Highs\_passLp(}&    \VoidStarHighsInstance\codeComma\\
     &\Const{} \HighsInt{} \NumCol\codeComma    \Const{} \HighsInt{} \NumRow\codeComma\\
     &\Const{} \HighsInt{} \NumNz\codeComma\\
-    &\Const{} \HighsInt{} \Orientation\codeComma    \Const{} \HighsInt{} \Sense\codeComma\\
-    &\Const{} \Double{} \Offset\codeComma\\
+    &\Const{} \HighsInt{} \Aformat\codeComma\\
+    &\Const{} \HighsInt{} \Sense\codeComma \Const{} \Double{} \Offset\codeComma\\
     &\Const{} \DoubleStar{} \ColCost\codeComma    \Const{} \DoubleStar{} \ColLower\codeComma\\
     &\Const{} \DoubleStar{} \ColUpper\codeComma    \Const{} \DoubleStar{} \RowLower\codeComma\\
     &\Const{} \DoubleStar{} \RowUpper\codeComma    \Const{} \HighsIntStar{} \Astart\codeComma\\
@@ -39,8 +39,8 @@
     \HighsInt{} \code{Highs\_passMip(}&    \VoidStarHighsInstance\codeComma\\
     &\Const{} \HighsInt{} \NumCol\codeComma    \Const{} \HighsInt{} \NumRow\codeComma\\
     &\Const{} \HighsInt{} \NumNz\codeComma\\
-    &\Const{} \HighsInt{} \Orientation\codeComma    \Const{} \HighsInt{} \Sense\codeComma\\
-    &\Const{} \Double{} \Offset\codeComma\\
+    &\Const{} \HighsInt{} \Aformat\codeComma    \\
+    &\Const{} \HighsInt{} \Sense\codeComma \Const{} \Double{} \Offset\codeComma\\
     &\Const{} \DoubleStar{} \ColCost\codeComma    \Const{} \DoubleStar{} \ColLower\codeComma\\
     &\Const{} \DoubleStar{} \ColUpper\codeComma    \Const{} \DoubleStar{} \RowLower\codeComma\\
     &\Const{} \DoubleStar{} \RowUpper\codeComma    \Const{} \HighsIntStar{} \Astart\codeComma\\

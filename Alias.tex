@@ -44,6 +44,9 @@
 \newcommand{\Rust}{\mbox{Rust}\xspace}
 \newcommand{\Javascript}{\mbox{Javascript}\xspace}
 
+\newcommand{\cplex}{\texttt{cplex}\xspace}
+\newcommand{\Cplex}{\texttt{CPLEX}\xspace}
+
 \def\code#1{\texttt{#1}}
 \def\file#1{\texttt{#1}}
 
@@ -71,10 +74,14 @@
 \newcommand{\VectorHighsBasisStatus}{\code{std::vector<HighsBasisStatus>}}
 \newcommand{\VectorHighsVarType}{\code{std::vector<HighsVarType>}}
 \newcommand{\true}{\code{true}}
+\newcommand{\false}{\code{false}}
 
 %Header files
 \newcommand{\HighsH}{\code{Highs.h}}
 \newcommand{\CHighsH}{\code{interfaces/highs\_c\_api.h}}
+
+% Other files
+\newcommand{\HighsLogFile}{\code{Highs.log}}
 
 %Classes, structs and enums
 \newcommand{\Highs}{\code{Highs}}
@@ -87,10 +94,10 @@
 \newcommand{\HighsStatusWarning}{\code{HighsStatus::kWarning}}
 \newcommand{\HighsStatusError}{\code{HighsStatus::kError}}
 
-\newcommand{\MatrixOrientation}{\code{MatrixOrientation}}
-\newcommand{\MatrixOrientationNone}{\code{MatrixOrientation::kNone}}
-\newcommand{\MatrixOrientationColwise}{\code{MatrixOrientation::kColwise}}
-\newcommand{\MatrixOrientationRowwise}{\code{MatrixOrientation::kRowwise}}
+\newcommand{\MatrixFormat}{\code{MatrixFormat}}
+\newcommand{\MatrixFormatNone}{\code{MatrixFormat::kNone}}
+\newcommand{\MatrixFormatColwise}{\code{MatrixFormat::kColwise}}
+\newcommand{\MatrixFormatRowwise}{\code{MatrixFormat::kRowwise}}
 
 \newcommand{\ObjSense}{\code{ObjSense}}
 \newcommand{\ObjSenseMinimize}{\code{ObjSense::kMinimize}}
@@ -113,6 +120,7 @@
 \newcommand{\HighsLp}{\code{HighsLp}}
 \newcommand{\NumCol}{\code{num\_col\_}}
 \newcommand{\NumRow}{\code{num\_row\_}}
+\newcommand{\Aformat}{\code{format\_}}
 \newcommand{\Astart}{\code{a\_start\_}}
 \newcommand{\Aindex}{\code{a\_index\_}}
 \newcommand{\Avalue}{\code{a\_value\_}}
@@ -121,7 +129,6 @@
 \newcommand{\ColUpper}{\code{col\_upper\_}}
 \newcommand{\RowLower}{\code{row\_lower\_}}
 \newcommand{\RowUpper}{\code{row\_upper\_}}
-\newcommand{\Orientation}{\code{orientation\_}}
 \newcommand{\Sense}{\code{sense\_}}
 \newcommand{\Offset}{\code{offset\_}}
 \newcommand{\ModelName}{\code{model\_name\_}}
@@ -130,10 +137,11 @@
 \newcommand{\Integrality}{\code{integrality\_}}
 
 \newcommand{\NumNz}{\code{num\_nz\_}}
-\newcommand{\HessianNumNz}{\code{hessian\_num\_nz\_}}
+\newcommand{\QnumNz}{\code{q\_num\_nz\_}}
 % HighsHessian
 \newcommand{\HighsHessian}{\code{HighsHessian}}
 \newcommand{\Qdim}{\code{dim\_}}
+\newcommand{\Qformat}{\code{format\_}}
 \newcommand{\Qstart}{\code{q\_start\_}}
 \newcommand{\Qindex}{\code{q\_index\_}}
 \newcommand{\Qvalue}{\code{q\_value\_}}
@@ -176,7 +184,7 @@
 \newcommand{\HighsInfoQpIterationCount}{\code{qp\_iteration\_count}}
 \newcommand{\HighsInfoPrimalSolutionStatus}{\code{primal\_solution\_status}}
 \newcommand{\HighsInfoDualSolutionStatus}{\code{dual\_solution\_status}}
-\newcommand{\HighsInfoBasisStatus}{\code{basis\_status}}
+\newcommand{\HighsInfoBasisValidity}{\code{basis\_validity}}
 \newcommand{\HighsInfoObjectiveFunctionValue}{\code{objective\_function\_value}}
 \newcommand{\HighsInfoMipDualBound}{\code{mip\_dual\_bound}}
 \newcommand{\HighsInfoMipGap}{\code{mip\_gap}}
